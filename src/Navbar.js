@@ -10,11 +10,11 @@ class Navbar extends Component {
       height: '50px'
     };
     return (
-      <nav className="navbar navbar-default" style={navbarStyle}>
+      <nav className="navbar navbar-default navbar-inverse" style={navbarStyle}>
         <div className="container-fluid">
           <div className="navbar-header">
             <a className="navbar-brand" href="#">
-              <img alt="MOSAIQ" />
+              MOSAIQ
             </a>
           </div>
         </div>
