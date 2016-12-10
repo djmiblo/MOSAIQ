@@ -4,13 +4,19 @@
 - `crawler.js` scrapes news of the day and save as `<date>.json` file and MySQL.  
   + MySQL: 'news' table in 'MOSAIQ' database  
   + colums of 'news' table  
-    * `news_id`: `INT(11)` `NOT NULL` `PRIMARY KEY` `AUTO_INCREMENT`  
-    * `date`: `DATE` `NOT NULL`  
-    * `publisher`: `VARCHAR(20)` `NOT NULL`  
-    * `headline`: `TINYTEXT`  
-    * `body`: `TEXT`  
-    * `link`: `TINYTEXT` `NOT NULL`  
-- `autoCrawler.js` acts just as `crawler.js` accept that it automatically scrapes articles every 5 a.m.  
+    ```
+    +-----------+-------------+------+-----+---------+----------------+
+    | Field     | Type        | Null | Key | Default | Extra          |
+    +-----------+-------------+------+-----+---------+----------------+
+    | news_id   | int(11)     | NO   | PRI | NULL    | auto_increment |
+    | date      | date        | NO   |     | NULL    |                |
+    | publisher | varchar(20) | NO   |     | NULL    |                |
+    | headline  | tinytext    | YES  |     | NULL    |                |
+    | body      | text        | YES  |     | NULL    |                |
+    | link      | tinytext    | NO   |     | NULL    |                |
+    +-----------+-------------+------+-----+---------+----------------+
+    ```
+- `autoCrawler.js` acts just as `crawler.js` except that it automatically scrapes articles every 5 a.m.  
 
 
 mosaiq  
