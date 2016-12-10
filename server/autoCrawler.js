@@ -278,13 +278,42 @@ function crawlNews() {
         },
         function(err, result) {
           if (!err) {
-            fstCallback(null, 'success at fstCallback');
+            fstCallback(null);
           } else {
             console.log(err);
           }
         }
       )
 
+    },
+    function insertDB(callback) {
+      var client = mysql.createConnection({
+        user: 'root',
+        password: 'ghkfkd',
+        database: 'MOSAIQ'
+      })
+
+      var date = data.date;
+
+      jQuery.each(data.publishers, function(key, value) {
+        var publisher = key;
+
+        jQuery.each(value.articles, function(idx, obj) {
+          var headline = obj.headline;
+          var body = obj.body;
+          var alink = obj.alink;
+
+          client.query('INSERT INTO news (date, publisher, headline, body, link) VALUES (?,?,?,?,?)', [
+            date, publisher, headline, body, alink
+          ], function(err, data) {
+            if (err)
+              console.log(err);
+          })
+
+        })
+      })
+
+      callback(null, 'DBtest');
     }
   ], function(err) {
     if (!err) {
