@@ -275,7 +275,9 @@ function crawlNews() {
                     $('div.article_header_title_box > h2.subject').text();
                   filterAd(publisherName, $);
                   articleData.body = $('#dic_area').html().
-                    replace(/data\-src/g, 'src');
+                    replace(/data\-src/g, 'src').
+                    replace(/(\<img.+)(\>)/g, '$1\\$2').
+                    replace(/(\<br)(\>)/g, '$1\\$2');
 
                   data.publishers[publisherName].articles.push(articleData);
 
