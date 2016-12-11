@@ -289,23 +289,24 @@ function crawlNews() {
 
                   data.publishers[publisherName].articles.push(articleData);
 
-                  trdCallback(null, 'success at trdCallback');
+                  trdCallback(null);
                 } else {
                   trdCallback('error in trdCallback');
                 }
               })
             },
-            function(err, result) {
+            function(err) {
               if (!err) {
-                sndCallback(null, 'success at sndCallback');
+                sndCallback(null);
               } else {
                 console.log(err);
+                sndCallback('error in sndCallback');
               }
             }
           )
 
         },
-        function(err, result) {
+        function(err) {
           if (!err) {
             fstCallback(null);
           } else {
@@ -315,7 +316,7 @@ function crawlNews() {
       )
 
     },
-    function insertDB(callback) {
+    function insertDB(fstCallback) {
       var client = mysql.createConnection({
         user: 'root',
         password: 'ghkfkd',
@@ -323,6 +324,23 @@ function crawlNews() {
       })
 
       var date = data.date;
+
+      /*
+       * FROM HERE
+       */
+
+      async.whilst(
+        function() {
+        },
+        function(sndCallback) {
+        },
+        function(err, result) {
+        }
+      )
+
+      /*
+       * TO HERE
+       */
 
       jQuery.each(data.publishers, function(key, value) {
         var publisher = key;
@@ -336,7 +354,7 @@ function crawlNews() {
             date, publisher, headline, body, alink
           ], function(err, data) {
             if (err)
-              callback(err);
+              fstCallback(err);
           })
         })
       })
@@ -345,7 +363,7 @@ function crawlNews() {
        * have to process async functions....
        * have to be fixed!!!
        */
-      callback(null);
+      fstCallback(null);
     },
     function saveToFile(callback) {
       fs.writeFile(data.date + '.json', JSON.stringify(data, null, 2),
