@@ -17,7 +17,7 @@ require("jsdom").env("", function(err, window) {
 
 
 function crawlNews() {
-  var url = 'http://m.news.naver.com/newspaper/home.nhn';
+  var url = '';
   var data = {
     date: '',
     publishers: {
@@ -36,6 +36,14 @@ function crawlNews() {
   }
 
 
+  function setURL() {
+    var date = process.argv[2];
+    var regexp = /^\d{8}$/;
+    if (date.match(regexp) !== null)
+      url = 'http://m.news.naver.com?date=' + date;
+    else
+      url = 'http://m.news.naver.com';
+  }
 
   function completeURL(url) {
     return 'http://m.news.naver.com' + url;
@@ -151,6 +159,7 @@ function crawlNews() {
 
   async.waterfall([
     function scrapePublisher(callback) {
+      setURL();
       request(url, function(error, response, html) {
         if (!error) {
           var $ = cheerio.load(html);
@@ -227,7 +236,7 @@ function crawlNews() {
           if (!err) {
             callback(null);
           } else {
-            console.log(err);
+            callback(err);
           }
         }
       )
@@ -249,7 +258,6 @@ function crawlNews() {
           return hasLink;
         },
         function(sndCallback) {
-
           var leftArticles = [];
           var publisherName = '';
           jQuery.each(leftPublishers, function(name, links) {
@@ -301,7 +309,7 @@ function crawlNews() {
           if (!err) {
             fstCallback(null);
           } else {
-            console.log(err);
+            fstCallback(err);
           }
         }
       )
@@ -328,25 +336,31 @@ function crawlNews() {
             date, publisher, headline, body, alink
           ], function(err, data) {
             if (err)
-              console.log(err);
+              callback(err);
           })
-
         })
       })
 
-      callback(null, 'DBtest');
-    }
-  ], function(err) {
-    if (!err) {
+      /*
+       * have to process async functions....
+       * have to be fixed!!!
+       */
+      callback(null);
+    },
+    function saveToFile(callback) {
       fs.writeFile(data.date + '.json', JSON.stringify(data, null, 2),
         function(err) {
           if (err)
-            console.log(err);
-        })
-      console.log('waterfall ended successfully!');
-    } else {
-      console.log(err);
+            callback(err);
+          else
+            callback(null);
+        });
     }
+  ], function(err) {
+    if (!err)
+      console.log('waterfall ended successfully!');
+    else
+      console.log(err);
   })
 }
 
