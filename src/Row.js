@@ -19,9 +19,11 @@ class Row extends Component {
     let columns = this.makeColumnsFromArticles(this.props.articles.slice());
     let layout = this.makeCustomLayout(columns);
     return (
-      <tbody>
-        {layout}
-      </tbody>
+      <table className="table" style={{marginBottom: '0px'}}>
+        <tbody>
+          {layout}
+        </tbody>
+      </table>
     )
   }
 
@@ -29,7 +31,7 @@ class Row extends Component {
     articles.sort(function (a, b) {
       return a.length - b.length;
     });
-    let numberOfColumns = this.getNumberofColumns(articles.slice());
+    let numberOfColumns = this.getNumberOfColumns(articles.slice());
     let totalLength = articles.reduce((a,b) => a + b.length, 0);
     let columns = [];
     if (articles.length == numberOfColumns) {
@@ -41,12 +43,12 @@ class Row extends Component {
       /* 기사 3개가 칼럼 2개로 나눠졌을 경우 */
       let longestArticle = articles.pop();
       columns.push(this.makeColumn([longestArticle],[1],longestArticle.length/totalLength * 100));
-      columns.push(this.makeColumn(articles, articles.map((item) => item.length), (1 - longestArticle.length/totalLength)/100));
+      columns.push(this.makeColumn(articles, articles.map((item) => item.length), (1 - longestArticle.length/totalLength)*100));
     }
     return columns;
   }
 
-  getNumberofColumns(articles) {
+  getNumberOfColumns(articles) {
     if (articles.length != 3)
       return articles.length;
     else {
@@ -57,7 +59,7 @@ class Row extends Component {
       let totalLength = articles.reduce((a,b)=> a + b.length, 0);
       let longestLength = articles.pop().length;
       let ratio = longestLength/totalLength;
-      if (Math.abs(ratio - 0.3) < Math.abs(ratio - 0.5))
+      if (Math.abs(ratio - 0.35) < Math.abs(ratio - 0.5))
         return 3;
       else
         return 2;
@@ -91,7 +93,7 @@ class Row extends Component {
     }
 
     let column = {
-      ariticles: articles,
+      articles: articles,
       rowSpans: actualRowSpans
     };
 
@@ -109,13 +111,15 @@ class Row extends Component {
     for (let column of columns) {
       let cells = [];
       let rowSpans = column.rowSpans;
+      let articles = column.articles;
       let totalRowSpan = 0;
       while (rowSpans.length != 0) {
         let rowSpan = rowSpans.shift();
+        let article = articles.shift();
         totalRowSpan += rowSpan;
         cells.push((
-          <td rowSpan={rowSpan} width={column.width}>
-            <Square height={this.rowHeight * rowSpan} width={column.width}/>
+          <td rowSpan={rowSpan} width={column.width} style={{borderLeft: '1px solid black', borderBottom:'1px solid black'}}>
+            <Square height={this.rowHeight * rowSpan} width={column.width} article={article}/>
           </td>
         ));
         while (cells.length < totalRowSpan) {

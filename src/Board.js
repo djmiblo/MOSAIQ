@@ -2,6 +2,7 @@
  * Created by edchoi on 12/9/16.
  */
 import React, { Component } from 'react';
+import Navbar from './Navbar'
 import Row from './Row';
 
 class Board extends Component {
@@ -10,19 +11,19 @@ class Board extends Component {
   }
 
   render() {
-    let articles = this.getArticlesFromSever();
-    let articleRows = this.divideArticles(articles);
-    let totalAvailHeight = window.innerHeight;
+    let articles = this.props.articles;
+    let articleRows = this.divideArticles(articles.slice());
+    let totalAvailHeight = (window.innerHeight - Navbar.height);
     let totalArticleLength = articles.reduce((a,b) => a + b.length, 0);
     let articleHeights = articleRows.map((item) => {
       return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
     });
 
     return (
-      <table className="table table-bordered">
+      <div>
           <Row articles = {articleRows[0]} height = {articleHeights[0]}/>
           <Row articles = {articleRows[1]} height = {articleHeights[1]}/>
-      </table>
+      </div>
     );
   }
 
@@ -65,6 +66,7 @@ class Board extends Component {
     let sample_long = {
       headline: "long Sample",
       length: 55,
+      img: "http://imgnews.naver.net/image/021/2016/12/09/2016120901070112054001_b_99_20161209115709.jpg?type=w430",
       body: (<div>
         <div>
           <b>憲政사상 2번째… 대통령 권한정지, 黃총리가 대행<p>與도 최소 62명 찬성… 헌법재판소 탄핵심판 착수</p>
