@@ -2,42 +2,38 @@
  * Created by edchoi on 12/9/16.
  */
 import React, { Component } from 'react';
-import Square from './Square';
+import Row from './Row';
 
 class Board extends Component {
   constructor() {
     super();
-    this.articles = this.getArticlesFromSever();
-    this.preference = this.getPreference();
-    this.rowHeight = 5;
-    this.numberOfRows = Math.ceil(((window.innerHeight - 50)/this.rowHeight) * 0.95);
-    this.rowStyle = {
-      height: 5
-    };
   }
 
   render() {
-    let ex1 = this.makeColumn([this.articles[2]],[1]);
-    let ex3 = this.makeColumn(3, [1,2,1]);
-    let ex2 = this.makeColumn(2, [1,1]);
-    let exArr = [ex1, ex3, ex2];
-    let layout = this.makeCustomLayout(exArr);
+    let articles = this.getArticlesFromSever();
+    let articleRows = this.divideArticles(articles);
+    let totalAvailHeight = window.innerHeight;
+    let totalArticleLength = articles.reduce((a,b) => a + b.length, 0);
+    let articleHeights = articleRows.map((item) => {
+      return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
+    });
+
     return (
       <table className="table table-bordered">
-        <tbody>
-        {layout}
-        </tbody>
+          <Row articles = {articleRows[0]} height = {articleHeights[0]}/>
+          <Row articles = {articleRows[1]} height = {articleHeights[1]}/>
       </table>
     );
   }
 
-  makeColumsFromArticles(articles) {
-    let columns = [];
+  divideArticles(articles) {
+    return [[articles[articles.length - 1], articles[0]], [articles[3], articles[2], articles[1]]];
   }
 
   getArticlesFromSever() {
     let sample_short = {
-      headline: "sample_short",
+      headline: "Short Sample",
+      length: 15,
       body: (<div>
       <div>
         <b>憲政사상 2번째… 대통령 권한정지, 黃총리가 대행<p>與도 최소 62명 찬성… 헌법재판소 탄핵심판 착수</p>
@@ -49,7 +45,8 @@ class Board extends Component {
   };
 
     let sample_middle = {
-      headline: "sample_middle",
+      headline: "Middle Sample",
+      length: 35,
       body: (<div>
           <div>
             <b>憲政사상 2번째… 대통령 권한정지, 黃총리가 대행<p>與도 최소 62명 찬성… 헌법재판소 탄핵심판 착수</p>
@@ -66,8 +63,9 @@ class Board extends Component {
     };
 
     let sample_long = {
-      headline: "sample_long",
-       body: (<div>
+      headline: "long Sample",
+      length: 55,
+      body: (<div>
         <div>
           <b>憲政사상 2번째… 대통령 권한정지, 黃총리가 대행<p>與도 최소 62명 찬성… 헌법재판소 탄핵심판 착수</p>
             <p>朴대통령 "국민께 송구, 憲裁 심판에 담담히 대응"</p><p>野 "黃대행 체제 일단 지켜볼 것"</p></b>
@@ -78,117 +76,11 @@ class Board extends Component {
         </div></div>
       )
     };
-    console.log([sample_short, sample_middle, sample_long]);
-    return [sample_short, sample_middle, sample_long];
+    return [sample_short, sample_short, sample_middle, sample_middle, sample_long];
   }
 
   getPreference() {
 
-  }
-
-  makeColumn(articles=[], rowSpans=[], width=0) {
-    const totalRowSpans = rowSpans.reduce((a,b) => a+b, 0);
-    const defaultColumn = {
-      articles: [],
-      rowSpans: [this.numberOfRows]
-    };
-    if (articles.length < 1 || rowSpans.length != articles.length) {
-      return defaultColumn;
-    }
-
-    let actualRowSpans = rowSpans.map((span) => {
-      return Math.ceil(this.numberOfRows * (span/totalRowSpans));
-    });
-    let totalActualRowSpans = actualRowSpans.reduce((a,b) => a+b, 0);
-    while (totalActualRowSpans < this.numberOfRows) {
-      actualRowSpans[0]++;
-      totalActualRowSpans++;
-    }
-    while (totalActualRowSpans > this.numberOfRows) {
-      actualRowSpans[0]--;
-      totalActualRowSpans--;
-    }
-
-    let column = {
-      ariticles: articles,
-      rowSpans: actualRowSpans
-    };
-
-    if (width > 0) {
-      column = Object.assign({}, column, {width: window.innerWidth * (width/100)});
-    }
-
-    return column;
-  }
-
-  processWidth(columns) {
-    let alreadySetWidth = columns.reduce((a,b) => {
-      if (b.hasOwnProperty('width'))
-        return a + b.width;
-      else
-        return a;
-    }, 0);
-    let leftWidth = window.innerWidth - alreadySetWidth;
-    let numberOfColsWithoutWidth = columns.reduce((a,b) => {
-      if (!b.hasOwnProperty('width'))
-        return a + 1;
-      else
-        return a;
-    }, 0);
-    let averageWidth = leftWidth / numberOfColsWithoutWidth;
-
-    columns = columns.map((column) => {
-      if (!column.hasOwnProperty('width'))
-        return Object.assign({}, column, {width: averageWidth});
-      else
-        return column;
-    });
-
-    return columns;
-  }
-
-  makeCustomLayout(columns) {
-    columns = this.processWidth(columns);
-
-    let columnLayouts = [];
-    for (let column of columns) {
-      let cells = [];
-      let rowSpans = column.rowSpans;
-      let totalRowSpan = 0;
-      while (rowSpans.length != 0) {
-        let rowSpan = rowSpans.shift();
-        totalRowSpan += rowSpan;
-        cells.push((
-          <td rowSpan={rowSpan} width={column.width}>
-            <Square height={this.rowHeight * rowSpan} width={column.width}/>
-          </td>
-        ));
-        while (cells.length < totalRowSpan) {
-          cells.push(null);
-        }
-      }
-      columnLayouts.push(cells);
-    }
-
-    let rowLayouts = [];
-    for (let i=0; i<this.numberOfRows; i++) {
-      let row = [];
-      for (let column of columnLayouts) {
-        row.push(column[i]);
-      }
-      let rowLayout = row.reduce((a, b) => {
-        if(b)
-          a.push(b);
-        return a;
-      }, []);
-      rowLayouts.push((
-        <tr style={this.rowStyle}>
-          {rowLayout}
-        </tr>
-      ));
-    }
-
-    return rowLayouts;
   }
 }
 

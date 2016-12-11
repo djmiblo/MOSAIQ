@@ -7,13 +7,14 @@ class Navbar extends Component {
   render() {
     const navbarStyle = {
       'marginBottom': '0px',
+      minHeight: '50px',
       height: '50px'
     };
     return (
-      <nav className="navbar navbar-default navbar-inverse" style={navbarStyle}>
-        <div className="container-fluid">
-          <div className="navbar-header">
-            <a className="navbar-brand" href="#">
+      <nav className="navbar navbar-default" style={navbarStyle}>
+        <div className="container-fluid" style={navbarStyle}>
+          <div className="navbar-header" style={navbarStyle}>
+            <a className="navbar-brand" href="#" style={navbarStyle}>
               MOSAIQ
             </a>
           </div>
