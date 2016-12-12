@@ -11,13 +11,22 @@ class Board extends Component {
   }
 
   render() {
-    let articles = this.props.articles;
+    let articles = this.props.articles.slice();
     let articleRows = this.divideArticles(articles.slice());
     let totalAvailHeight = (window.innerHeight - Navbar.height);
     let totalArticleLength = articles.reduce((a,b) => a + b.length, 0);
     let articleHeights = articleRows.map((item) => {
       return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
     });
+    //
+    // console.log(articles.length);
+    // console.log(articleRows[0].length + articleRows[1].length);
+    // console.log('total available height: ' + totalAvailHeight);
+    // console.log(totalAvailHeight == (articleHeights[0] + articleHeights[1]));
+    // if (totalAvailHeight != (articleHeights[0] + articleHeights[1])) {
+    //   console.log(articles);
+    //   console.log(articleRows);
+    // }
 
     return (
       <div>
@@ -28,7 +37,7 @@ class Board extends Component {
   }
 
   divideArticles(articles) {
-    return [[articles[articles.length - 1], articles[0], articles[0]], [articles[3],articles[3], articles[2], articles[1]]];
+    return [[articles[0], articles[1], articles[2]], [articles[3],articles[4], articles[5], articles[6]]];
   }
 
   getPreference() {

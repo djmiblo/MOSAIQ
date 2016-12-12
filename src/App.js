@@ -29,7 +29,7 @@ class App extends Component {
       return articles;
     else {
       let newCurrent = [];
-      while(newCurrent.length < 8) {
+      while(newCurrent.length < 7) {
         let item = articles[Math.floor(Math.random()*articles.length)];
         newCurrent.push(item);
       }

@@ -20,14 +20,20 @@ class Square extends Component {
       return this.SQUARE;
   }
 
-  render() {
-    const style = {
-      overflow: "hidden",
-      height: this.props.height,
-    };
+  getFontSize(width) {
+    return (this.props.width * this.props.height) * 0.0004;
+  }
 
+  render() {
+    const titleStyle = {
+      fontFamily: 'serif',
+      fontSize: this.getFontSize(this.props.width),
+      marginBotton: '0px',
+      overflowWrap: 'break-word',
+      width: this.props.width,
+      padding: '0px',
+    };
     if (this.props.article.hasOwnProperty('img')){
-      const imgLength = this.props.width > this.props.height ? this.props.height : this.props.width;
       const imgDivStyle = {
         width: this.props.width,
         height: this.props.height,
@@ -45,20 +51,20 @@ class Square extends Component {
         minWidth: '100%',
       };
       return (
-        <div style={{style}}>
+        <div>
           <div style={imgDivStyle}>
             <img src={this.props.article.img} style={imgStyle}/>
           </div>
         </div>
       );
-      } else {
-        return (
-          <div style={{style}}>
-            {this.props.article.headline}
-          </div>
-        );
-      }
+    } else {
+      return (
+        <div>
+          <p style={titleStyle}>{this.props.article.headline}</p>
+        </div>
+      );
     }
+  }
 }
 // const imgDivStyle = {
 //   height: (this.props.height - titleSize),
