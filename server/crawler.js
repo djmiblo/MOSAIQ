@@ -295,6 +295,7 @@ function crawlNews() {
 
                   trdCallback(null);
                 } else {
+                  console.log(error);
                   trdCallback('error in trdCallback');
                 }
               })

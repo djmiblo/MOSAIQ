@@ -92,7 +92,7 @@ app.get('/news', function(req, res) {
     else {
       res.header("Content-Type",'application/json');
       res.json({
-        error: "no data for DATE:" + date
+        error: "no data for " + date
       });
     }
   })
