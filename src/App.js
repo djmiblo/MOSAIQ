@@ -12,13 +12,13 @@ class App extends Component {
     this.handleClickNext = this.handleClickNext.bind(this);
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
+    // this.handleEvent = this.handleEvent.bind(this);
     this.state = {
       currentArticles: this.getCurrentArticles(this.articles.slice()),
       page: 1,
       showModal: false,
       cureent: null
     };
-    const cast = window.cast;
   }
 
   close() {
@@ -67,7 +67,7 @@ class App extends Component {
     }
   }
 
-  handleClickPrev(e) {
+  handleClickPrev() {
     let nextArticles = this.getCurrentArticles(this.articles);
     this.setState({
       currentArticles: nextArticles,
@@ -75,7 +75,7 @@ class App extends Component {
     });
   }
 
-  handleClickNext(e) {
+  handleClickNext() {
     let nextArticles = this.getCurrentArticles(this.articles);
     this.setState({
       currentArticles: nextArticles,
