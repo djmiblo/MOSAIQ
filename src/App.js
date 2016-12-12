@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Navbar from './Navbar.js'
 import Board from './Board.js'
+import {Button, Modal} from 'react-bootstrap'
 
 class App extends Component {
   constructor() {
@@ -9,17 +10,45 @@ class App extends Component {
     this.articles = this.getArticlesFromSever();
     this.handleClickPrev = this.handleClickPrev.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
     this.state = {
       currentArticles: this.getCurrentArticles(this.articles.slice()),
-      page: 1
+      page: 1,
+      showModal: false,
+      cureent: null
     }
   }
 
+  close() {
+    this.setState({ showModal: false, current: null });
+  }
+
+  open(article) {
+    console.log(article);
+    this.setState({ showModal: true, current: article});
+  }
+
   render() {
+    const article = this.state.current;
     return (
       <div className="App">
         <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
-        <Board articles={this.state.currentArticles}/>
+        <Board articles={this.state.currentArticles} onClick={this.open}/>
+
+        <Modal show={this.state.showModal} onHide={this.close}>
+          <Modal.Header closeButton>
+            <Modal.Title><p>{article ? article.headline : null}</p></Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {article? (<img style={{width: '100%'}} src={article.img}/>) : null}
+            {article? (article.img? <hr />:null): null}
+            <p>{article ? article.text : null}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.close}>Close</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

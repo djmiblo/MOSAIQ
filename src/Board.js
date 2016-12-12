@@ -30,8 +30,9 @@ class Board extends Component {
 
     return (
       <div>
-          <Row articles = {articleRows[0]} height = {articleHeights[0]}/>
-          <Row articles = {articleRows[1]} height = {articleHeights[1]}/>
+        {
+          articleRows.map((item, i) => (<Row articles={item} height={articleHeights[i]} onClick={this.props.onClick}/>))
+        }
       </div>
     );
   }

@@ -9,7 +9,9 @@ class Square extends Component {
   }
 
   getFontSize() {
-    return Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.005;
+    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.004;
+    const minimumSize = 11;
+    return sizeByCell > minimumSize? sizeByCell : minimumSize;
   }
 
   render() {
@@ -20,7 +22,9 @@ class Square extends Component {
       overflowWrap: 'break-word',
       margin: '0px',
       position: 'relative',
+      fontWeight: 'bold'
     };
+
     if (this.props.article.hasOwnProperty('img')){
       const imgDivStyle = {
         width: this.props.width,
@@ -28,7 +32,8 @@ class Square extends Component {
         overflow: 'hidden',
         position: 'relative',
         verticalAlign: 'middle',
-        display: 'table-cell', verticalAlign: 'middle'
+        display: 'table-cell', verticalAlign: 'middle',
+        // background: 'black',
       };
       const imgStyle = {
         position: 'absolute',
@@ -39,9 +44,9 @@ class Square extends Component {
         margin: 'auto',
         minHeight: '100%',
         minWidth: '100%',
-        // opacity: 0.2,
+        opacity: 0.35,
       };
-      const imgTitleStyle = Object.assign({}, titleStyle, {backgroundColor:"rgba(255,255,255,0.8)"});
+      const imgTitleStyle = Object.assign({}, titleStyle, {color:"black"});
 
       return (
         <div>

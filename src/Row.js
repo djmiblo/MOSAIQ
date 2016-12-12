@@ -118,7 +118,7 @@ class Row extends Component {
         let article = articles.shift();
         totalRowSpan += rowSpan;
         cells.push((
-          <td rowSpan={rowSpan} width={column.width} style={{verticalAlign:'middle', padding: '0px', borderLeft: '1px solid black', borderBottom:'1px solid black'}}>
+          <td onClick={() => this.props.onClick(article)} rowSpan={rowSpan} width={column.width} style={{verticalAlign:'middle', padding: '0px', borderLeft: '1px solid black', borderBottom:'1px solid black'}}>
             <Square height={this.rowHeight * rowSpan} width={column.width} article={article}/>
           </td>
         ));
