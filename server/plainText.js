@@ -25,7 +25,7 @@ client.query('SELECT body FROM news',
     if (err)
       console.log(err);
     else {
-      var body = rows[0].body;
+      var body = rows[50].body;
 
       var regexp = /\<[^\<\>]+\>/g;
       body = body.replace(regexp, '');
