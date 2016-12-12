@@ -32,8 +32,7 @@ class Square extends Component {
         overflow: 'hidden',
         position: 'relative',
         verticalAlign: 'middle',
-        display: 'table-cell', verticalAlign: 'middle',
-        // background: 'black',
+        display: 'table-cell',
       };
       const imgStyle = {
         position: 'absolute',
@@ -46,14 +45,14 @@ class Square extends Component {
         minWidth: '100%',
         opacity: 0.35,
       };
-      const imgTitleStyle = Object.assign({}, titleStyle, {color:"black"});
+      const imgTitleStyle = Object.assign({}, titleStyle);
 
       return (
         <div>
-          <div style={imgDivStyle}>
+          <div className="imgDiv" style={imgDivStyle}>
             <img src={this.props.article.img} style={imgStyle}/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
-            <p style={imgTitleStyle}>{this.props.article.headline}</p>
+              <p style={imgTitleStyle}>{this.props.article.headline}</p>
             </div>
           </div>
         </div>

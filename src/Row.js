@@ -3,6 +3,7 @@
  */
 import React, { Component } from 'react';
 import Square from './Square';
+import './Row.css'
 
 class Row extends Component {
   constructor(props) {
