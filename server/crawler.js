@@ -178,12 +178,9 @@ function crawlNews() {
               return true;
             }
 
-            // HERE!!!!!!
-            if (newsName === '조선일보') {
-              data.publishers[newsName] = {
-                nlink: completeURL(newsLink),
-                articles: []
-              }
+            data.publishers[newsName] = {
+              nlink: completeURL(newsLink),
+              articles: []
             }
           });
 
@@ -290,9 +287,14 @@ function crawlNews() {
                     $('div.article_header_title_box > h2.subject').text();
                   filterAd(publisherName, $);
                   articleData.body = $('#dic_area').html().
-                    replace(/data\-src/g, 'src').
-                    replace(/(\<img.+)(\>)/g, '$1\/$2').
+                    replace(/(\<img.+)(\>)/g, '').
                     replace(/(\<br)(\>)/g, '$1\/$2');
+
+                  var imgsrc = [];
+                  $('#dic_area').find('img').each(function(idx) {
+                    imgsrc.push($(this).attr('data-src'));
+                  })
+                  articleData.img = imgsrc;
 
                   data.publishers[publisherName].articles.push(articleData);
 
@@ -359,9 +361,10 @@ function crawlNews() {
               var headline = article.headline;
               var body = article.body;
               var alink = article.alink;
+              var imgsrc = article.img.join(',');
 
-              client.query('INSERT INTO news (date, publisher, headline, body, link) VALUES (?,?,?,?,?)', [
-                date, name, headline, body, alink
+              client.query('INSERT INTO news (date, publisher, headline, body, img, link) VALUES (?,?,?,?,?,?)', [
+                date, name, headline, body, imgsrc, alink
               ], function(err, data) {
                 if (err) {
                   console.log(err);

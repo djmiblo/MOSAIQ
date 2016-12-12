@@ -15,6 +15,10 @@ app.use(bodyParser.urlencoded({
 var testData = JSON.parse(fs.readFileSync('2016-12-12.json', 'utf8'));
 var allNews = [];
 
+function calcLen(str) {
+  return parseInt(str.length / 8);
+}
+
 function selectNews(date, callback) {
   var client = mysql.createConnection({
     user: 'root',
@@ -22,13 +26,14 @@ function selectNews(date, callback) {
     database: 'MOSAIQ'
   })
 
-  client.query('SELECT date, publisher, headline, body FROM news WHERE date=?', [date],
+  client.query('SELECT date, publisher, headline, body, img FROM news WHERE date=?', [date],
     function(err, rows) {
       if (err)
         console.log(err);
       else {
         allNews = [];
         rows.forEach(function(value) {
+          value.length = calcLen(value.body);
           allNews.push(value);
         })
         callback();
