@@ -18,6 +18,6 @@
 - `plainText.js` removes tags from articles and count their words  
 - `clientModel.js` shows how to request data to the server.  
   - the server returns the array of objects.  
-  - *****form**
-    [{date:<date>, publisher:<publisher>, headline:<article headline>, body:<article body>}, ...]  
+  - **form**  
+    [{date:\<date\>, publisher:\<publisher\>, headline:\<article headline\>, body:\<article body\>}, ...]  
 
