@@ -34,6 +34,7 @@ function selectNews(date, callback) {
         allNews = [];
         rows.forEach(function(value) {
           value.length = calcLen(value.body);
+          value.img = value.img.split(',');
           allNews.push(value);
         })
         callback();
