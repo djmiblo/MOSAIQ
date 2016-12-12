@@ -6,6 +6,17 @@ import React, { Component } from 'react';
 class Navbar extends Component {
   static height = 50;
 
+  constructor(props) {
+    super(props);
+    // handler for the CastMessageBus message event
+    window.messageBus.onMessage = function(event) {
+      if (event.data == 'next')
+        this.props.onNext();
+    };
+    window.castReceiverManager.start({statusText: "Application is starting"});
+    console.log('Receiver Manager started');
+  }
+
   render() {
     const navbarStyle = {
       'marginBottom': '0px',
