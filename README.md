@@ -2,8 +2,8 @@
 ## Server  
 - `server.js` serves whole news data as an object if requested `GET` `/news`.  
 - `crawler.js` scrapes news of the day and save as `<date>.json` file and MySQL.  
-  + MySQL: 'news' table in 'MOSAIQ' database  
-  + colums of 'news' table  
+  - MySQL: 'news' table in 'MOSAIQ' database  
+  - colums of 'news' table  
   
     | Field     | Type        | Null | Key | Default | Extra          |
     |-----------|-------------|------|-----|---------|----------------|
@@ -15,5 +15,9 @@
     | link      | TINYTEXT    | NO   |     | NULL    |                |
 
 - `autoCrawler.js` acts just as `crawler.js` except that it automatically scrapes articles every 5 a.m.  
-- `plainText.js` removes tags from articles and count their words
+- `plainText.js` removes tags from articles and count their words  
+- `clientModel.js` shows how to request data to the server.  
+  - the server returns the array of objects.  
+  - *****form**
+    [{date:<date>, publisher:<publisher>, headline:<article headline>, body:<article body>}, ...]  
 
