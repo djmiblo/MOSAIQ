@@ -39,10 +39,12 @@ function crawlNews() {
   function setURL() {
     var date = process.argv[2];
     var regexp = /^\d{8}$/;
-    if (date.match(regexp) !== null)
-      url = 'http://m.news.naver.com?date=' + date;
+    if (date == null)
+      url = 'http://m.news.naver.com/newspaper/home.nhn';
+    else if (date.match(regexp) !== null)
+      url = 'http://m.news.naver.com/newspaper/home.nhn?date=' + date;
     else
-      url = 'http://m.news.naver.com';
+      url = 'http://m.news.naver.com/newspaper/home.nhn';
   }
 
   function completeURL(url) {
@@ -325,60 +327,78 @@ function crawlNews() {
 
       var date = data.date;
 
-      /*
-       * FROM HERE
-       */
+      var leftPublishers = [];
+      jQuery.each(data.publishers, function(name, newsInfo) {
+        var pubInfo = {};
+        pubInfo['name'] = name;
+        pubInfo['articles'] = newsInfo.articles.slice();
+        leftPublishers.push(pubInfo);
+      })
 
       async.whilst(
         function() {
+          return leftPublishers.length > 0;
         },
         function(sndCallback) {
+          var publisher = leftPublishers.pop();
+
+          async.whilst(
+            function() {
+              return publisher.articles.length > 0;
+            },
+            function(trdCallback) {
+              var name = publisher.name;
+              var article = publisher.articles.pop();
+              var headline = article.headline;
+              var body = article.body;
+              var alink = article.alink;
+
+              client.query('INSERT INTO news (date, publisher, headline, body, link) VALUES (?,?,?,?,?)', [
+                date, name, headline, body, alink
+              ], function(err, data) {
+                if (err) {
+                  console.log(err);
+                  trdCallback('error while querying MySQL');
+                }
+                else
+                  trdCallback(null);
+              })
+            },
+            function(err) {
+              if (err)
+                sndCallback(err);
+              else
+                sndCallback(null);
+            }
+          )
         },
-        function(err, result) {
+        function(err) {
+          if (err)
+            fstCallback(err);
+          else
+            fstCallback(null);
         }
       )
-
-      /*
-       * TO HERE
-       */
-
-      jQuery.each(data.publishers, function(key, value) {
-        var publisher = key;
-
-        jQuery.each(value.articles, function(idx, obj) {
-          var headline = obj.headline;
-          var body = obj.body;
-          var alink = obj.alink;
-
-          client.query('INSERT INTO news (date, publisher, headline, body, link) VALUES (?,?,?,?,?)', [
-            date, publisher, headline, body, alink
-          ], function(err, data) {
-            if (err)
-              fstCallback(err);
-          })
-        })
-      })
-
-      /*
-       * have to process async functions....
-       * have to be fixed!!!
-       */
-      fstCallback(null);
     },
     function saveToFile(callback) {
       fs.writeFile(data.date + '.json', JSON.stringify(data, null, 2),
         function(err) {
-          if (err)
+         if (err)
             callback(err);
-          else
+          else {
             callback(null);
+          }
         });
     }
   ], function(err) {
-    if (!err)
-      console.log('waterfall ended successfully!');
-    else
+    if (err) {
       console.log(err);
+      process.exit();
+    }
+    else {
+      console.log('waterfall ended successfully!');
+      process.exit();
+    }
   })
 }
 
