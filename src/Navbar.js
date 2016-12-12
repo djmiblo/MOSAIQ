@@ -9,8 +9,11 @@ class Navbar extends Component {
   render() {
     // handler for the CastMessageBus message event
     window.messageBus.onMessage = function(event) {
-      if (event.data == 'next')
+      if (event.data == 'next') {
+        console.log('receiving chromecast message');
+        console.log(this.props);
         this.props.onNext();
+      }
     };
     window.castReceiverManager.start({statusText: "Application is starting"});
     console.log('Receiver Manager started');
