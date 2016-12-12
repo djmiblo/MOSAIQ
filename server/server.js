@@ -15,18 +15,19 @@ app.use(bodyParser.urlencoded({
 var testData = JSON.parse(fs.readFileSync('2016-12-12.json', 'utf8'));
 var allNews = [];
 
-function selectNews(callback) {
+function selectNews(date, callback) {
   var client = mysql.createConnection({
     user: 'root',
     password: 'ghkfkd',
     database: 'MOSAIQ'
   })
 
-  client.query('SELECT date, publisher, headline, body FROM news WHERE date="2016-12-12"',
+  client.query('SELECT date, publisher, headline, body FROM news WHERE date=?', [date],
     function(err, rows) {
       if (err)
         console.log(err);
       else {
+        allNews = [];
         rows.forEach(function(value) {
           allNews.push(value);
         })
@@ -84,8 +85,16 @@ function ENtoKR(publisher) {
 }
 
 app.get('/news', function(req, res) {
-  selectNews(function() {
-    res.json(allNews);
+  var date = req.query.date;
+  selectNews(date, function() {
+    if (allNews.length != 0)
+      res.json(allNews);
+    else {
+      res.header("Content-Type",'application/json');
+      res.json({
+        error: "no data for DATE:" + date
+      });
+    }
   })
 })
 
