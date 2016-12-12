@@ -32,6 +32,16 @@ class App extends Component {
 
   render() {
     const article = this.state.current;
+    // handler for the CastMessageBus message event
+    window.handleClick = this.handleClickNext;
+    window.messageBus.onMessage = function(event) {
+      if (event.data == 'next') {
+        console.log('receiving chromecast message App');
+        window.handleClick();
+      }
+    };
+    window.castReceiverManager.start({statusText: "Application is starting"});
+    console.log('Receiver Manager started');
     return (
       <div className="App">
         <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
