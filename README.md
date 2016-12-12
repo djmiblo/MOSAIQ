@@ -11,11 +11,9 @@
     | date      | DATE        | NO   |     | NULL    |                |
     | publisher | VARCHAR(20) | NO   |     | NULL    |                |
     | headline  | TINYTEXT    | YES  |     | NULL    |                |
-    | body      | TEXT        | YES  |     | NULL    |                |
+    | body      | MEDIUMTEXT  | YES  |     | NULL    |                |
     | link      | TINYTEXT    | NO   |     | NULL    |                |
 
 - `autoCrawler.js` acts just as `crawler.js` except that it automatically scrapes articles every 5 a.m.  
-
-
-mosaiq  
+- `plainText.js` removes tags from articles and count their words
 
