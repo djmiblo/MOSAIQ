@@ -4,19 +4,35 @@
 import React, { Component } from 'react';
 
 class Navbar extends Component {
+  static height = 50;
+
   render() {
     const navbarStyle = {
       'marginBottom': '0px',
-      height: '50px'
+      minHeight: '50px',
+      height: this.height + 'px'
+    };
+    const brandStyle = {
+      position: 'absolute',
+      width: '50%',
+      left: '25%',
+      // marginLeft: '-200px !important',  /* 50% of your logo width */
+      display: 'block'
     };
     return (
       <nav className="navbar navbar-default" style={navbarStyle}>
-        <div className="container-fluid">
-          <div className="navbar-header">
-            <a className="navbar-brand" href="#">
-              <img alt="MOSAIQ" />
+        <div className="container-fluid" style={navbarStyle}>
+          <ul className="nav navbar-nav navbar-left">
+            <li><a href="#" onClick={this.props.onPrev}>Prev</a></li>
+          </ul>
+          <div className="navbar-header" style={navbarStyle}>
+            <a className="navbar-brand" href="#" style={brandStyle}>
+              MOSAIQ
             </a>
           </div>
+            <ul className="nav navbar-nav navbar-right">
+              <li><a href="#" onClick={this.props.onNext}>Next</a></li>
+            </ul>
         </div>
       </nav>
     );
