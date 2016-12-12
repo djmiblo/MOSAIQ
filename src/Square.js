@@ -6,9 +6,9 @@ import React, { Component } from 'react';
 class Square extends Component {
   constructor(props) {
     super(props);
-    this.SQUARE = 1;
-    this.VERTICAL = 2;
-    this.HORIZONTAL = 3;
+    this.SQUARE = 'Square';
+    this.VERTICAL = 'Vertical';
+    this.HORIZONTAL = 'horizontal';
   }
 
   getShape(width, height) {
@@ -23,86 +23,58 @@ class Square extends Component {
   render() {
     const style = {
       overflow: "hidden",
-      // height: this.props.height,
-    };
-    const imgStyle = {
-      maxHeight: this.props.height,
-      maxWidth: this.props.width - 30,
-      width: 'auto',
-      height: 'auto'
+      height: this.props.height,
     };
 
-    // console.log(this.state.shape);
-    // console.log('width: '+this.props.width);
-    // console.log('height: '+this.props.height);
-
-    let shape = this.getShape(this.props.width, this.props.height);
     if (this.props.article.hasOwnProperty('img')){
-      if (shape == this.SQUARE){
-        return (
-          <div style={{style}}>
-            <h1>{ this.props.article.headline } {shape}</h1>
-            {this.props.width} {this.props.height}
-            <br/>
-            <br/>
-            {/*{ this.props.article.body }*/}
+      const imgLength = this.props.width > this.props.height ? this.props.height : this.props.width;
+      const imgDivStyle = {
+        width: this.props.width,
+        height: this.props.height,
+        overflow: 'hidden',
+        position: 'relative'
+      };
+      const imgStyle = {
+        position: 'absolute',
+        left: '-1000%',
+        right: '-1000%',
+        top: '-1000%',
+        bottom: '-1000%',
+        margin: 'auto',
+        minHeight: '100%',
+        minWidth: '100%',
+      };
+      return (
+        <div style={{style}}>
+          <div style={imgDivStyle}>
+            <img src={this.props.article.img} style={imgStyle}/>
           </div>
-        );
-      } else if (shape == this.VERTICAL) {
-        return (
-          <div style={{style}}>
-            <h1>{ this.props.article.headline } {shape}</h1>
-            {this.props.width} {this.props.height}
-            <br/>
-            <br/>
-            {/*{ this.props.article.body }*/}
-          </div>
-        );
+        </div>
+      );
       } else {
         return (
           <div style={{style}}>
-            <h1>{ this.props.article.headline } {shape}</h1>
-            {this.props.width} {this.props.height}
-            <br/>
-            <br/>
-            {/*{ this.props.article.body }*/}
-          </div>
-        );
-      }
-    } else {
-      if (shape == this.SQUARE){
-        return (
-          <div style={{style}}>
-            <h1>{ this.props.article.headline } {shape}</h1>
-            {this.props.width} {this.props.height}
-            <br/>
-            <br/>
-            {/*{ this.props.article.body }*/}
-          </div>
-        );
-      } else if (shape == this.VERTICAL) {
-        return (
-          <div style={{style}}>
-            <h1>{ this.props.article.headline } {shape}</h1>
-            {this.props.width} {this.props.height}
-            <br/>
-            <br/>
-            {/*{ this.props.article.body }*/}
-          </div>
-        );
-      } else {
-        return (
-          <div style={{style}}>
-            <h1>{ this.props.article.headline } {shape}</h1>
-            {this.props.width} {this.props.height}
-            <br/>
-            <br/>
-            {/*{ this.props.article.body }*/}
+            {this.props.article.headline}
           </div>
         );
       }
     }
-  }
 }
+// const imgDivStyle = {
+//   height: (this.props.height - titleSize),
+//   overflow: 'hidden',
+//   position: 'relative'
+// };
+// const imgStyle = {
+//   width: (this.props.width - 10) + 'px',
+//   height: 'auto',
+//   overflow: 'hidden',
+//   position: 'absolute',
+//   margin: 'auto',
+//   top: 0,
+//   left: 0,
+//   right: 0,
+//   bottom: 0,
+// };
 
 export default Square;
