@@ -17,7 +17,8 @@ class App extends Component {
       page: 1,
       showModal: false,
       cureent: null
-    }
+    };
+    const cast = window.cast;
   }
 
   close() {
