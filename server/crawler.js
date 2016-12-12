@@ -286,8 +286,8 @@ function crawlNews() {
                   filterAd(publisherName, $);
                   articleData.body = $('#dic_area').html().
                     replace(/data\-src/g, 'src').
-                    replace(/(\<img.+)(\>)/g, '$1\\$2').
-                    replace(/(\<br)(\>)/g, '$1\\$2');
+                    replace(/(\<img.+)(\>)/g, '$1\/$2').
+                    replace(/(\<br)(\>)/g, '$1\/$2');
 
                   data.publishers[publisherName].articles.push(articleData);
 

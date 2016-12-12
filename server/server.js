@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
-var testData = JSON.parse(fs.readFileSync('2016-12-10.json', 'utf8'));
+var testData = JSON.parse(fs.readFileSync('2016-12-12.json', 'utf8'));
 var allNews = [];
 
 function selectNews(callback) {
