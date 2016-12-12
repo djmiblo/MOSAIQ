@@ -39,14 +39,17 @@ class Square extends Component {
         margin: 'auto',
         minHeight: '100%',
         minWidth: '100%',
-        opacity: 0.6,
+        // opacity: 0.2,
       };
+      const imgTitleStyle = Object.assign({}, titleStyle, {backgroundColor:"rgba(255,255,255,0.8)"});
 
       return (
         <div>
           <div style={imgDivStyle}>
             <img src={this.props.article.img} style={imgStyle}/>
-            <p style={titleStyle}>{this.props.article.headline}</p>
+            <div style={{width: '80%', left: '10%', position: 'relative'}}>
+            <p style={imgTitleStyle}>{this.props.article.headline}</p>
+            </div>
           </div>
         </div>
       );

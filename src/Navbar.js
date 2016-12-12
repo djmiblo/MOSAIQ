@@ -14,8 +14,9 @@ class Navbar extends Component {
     };
     const brandStyle = {
       position: 'absolute',
-      left: '50%',
-      marginLeft: '-200px !important',  /* 50% of your logo width */
+      width: '50%',
+      left: '25%',
+      // marginLeft: '-200px !important',  /* 50% of your logo width */
       display: 'block'
     };
     return (
