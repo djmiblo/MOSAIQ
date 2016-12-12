@@ -22,7 +22,7 @@ function selectNews(callback) {
     database: 'MOSAIQ'
   })
 
-  client.query('SELECT date, publisher, headline, body FROM news WHERE date="2016-12-10"',
+  client.query('SELECT date, publisher, headline, body FROM news WHERE date="2016-12-12"',
     function(err, rows) {
       if (err)
         console.log(err);
@@ -35,7 +35,7 @@ function selectNews(callback) {
     })
 }
 
-function interpreter(publisher) {
+function ENtoKR(publisher) {
   if (publisher === 'donga') {
     return '동아일보';
   } else if (publisher === 'jeonja') {
@@ -91,7 +91,7 @@ app.get('/news', function(req, res) {
 
 app.get('/:pub', function(req, res) {
   var idx = req.query.idx;
-  var param = interpreter(req.params.pub);
+  var param = ENtoKR(req.params.pub);
 
   var output = '';
   output += '<!DOCTYPE html>';
