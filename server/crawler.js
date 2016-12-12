@@ -193,6 +193,7 @@ function crawlNews() {
             data.date = dateGot;
           })
 
+          console.log('completed scrapePublisher...');
           callback(null);
         } else {
           callback('error while getting publisher');
@@ -236,6 +237,7 @@ function crawlNews() {
         }, 
         function(err, result) {
           if (!err) {
+            console.log('completed scrapeArticleLink...');
             callback(null);
           } else {
             callback(err);
@@ -310,6 +312,7 @@ function crawlNews() {
         },
         function(err) {
           if (!err) {
+            console.log('completed scrapeArticles...');
             fstCallback(null);
           } else {
             fstCallback(err);
@@ -375,8 +378,10 @@ function crawlNews() {
         function(err) {
           if (err)
             fstCallback(err);
-          else
+          else {
+            console.log('completed insertDB...');
             fstCallback(null);
+          }
         }
       )
     },
@@ -386,9 +391,11 @@ function crawlNews() {
          if (err)
             callback(err);
           else {
+            console.log('completed saveToFile...');
             callback(null);
           }
-        });
+        }
+      );
     }
   ], function(err) {
     if (err) {
