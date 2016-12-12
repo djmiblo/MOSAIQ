@@ -20,5 +20,5 @@
 - `clientModel.js` shows how to request data to the server.  
   - the server returns the array of objects.  
   - **data form** 
-    `[{date:\<date\>, publisher:\<publisher\>, headline:\<article headline\>, body:\<article body\>}, img:\<list of images\>, length:\<length of the body\> ...]`  
+    [{date:\<date\>, publisher:\<publisher\>, headline:\<article headline\>, body:\<article body\>}, img:\<list of images\>, length:\<length of the body\> ...]  
 
