@@ -6,22 +6,10 @@ import React, { Component } from 'react';
 class Square extends Component {
   constructor(props) {
     super(props);
-    this.SQUARE = 'Square';
-    this.VERTICAL = 'Vertical';
-    this.HORIZONTAL = 'horizontal';
   }
 
-  getShape(width, height) {
-    if (width > height * 1.8)
-      return this.HORIZONTAL;
-    else if (height > width * 1.8)
-      return this.VERTICAL;
-    else
-      return this.SQUARE;
-  }
-
-  getFontSize(width) {
-    return (this.props.width * this.props.height) * 0.0004;
+  getFontSize() {
+    return Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.005;
   }
 
   render() {
@@ -30,15 +18,17 @@ class Square extends Component {
       fontSize: this.getFontSize(this.props.width),
       marginBotton: '0px',
       overflowWrap: 'break-word',
-      width: this.props.width,
-      padding: '0px',
+      margin: '0px',
+      position: 'relative',
     };
     if (this.props.article.hasOwnProperty('img')){
       const imgDivStyle = {
         width: this.props.width,
         height: this.props.height,
         overflow: 'hidden',
-        position: 'relative'
+        position: 'relative',
+        verticalAlign: 'middle',
+        display: 'table-cell', verticalAlign: 'middle'
       };
       const imgStyle = {
         position: 'absolute',
@@ -49,11 +39,14 @@ class Square extends Component {
         margin: 'auto',
         minHeight: '100%',
         minWidth: '100%',
+        opacity: 0.6,
       };
+
       return (
         <div>
           <div style={imgDivStyle}>
             <img src={this.props.article.img} style={imgStyle}/>
+            <p style={titleStyle}>{this.props.article.headline}</p>
           </div>
         </div>
       );
