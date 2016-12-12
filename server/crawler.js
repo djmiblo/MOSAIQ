@@ -178,9 +178,12 @@ function crawlNews() {
               return true;
             }
 
-            data.publishers[newsName] = {
-              nlink: completeURL(newsLink),
-              articles: []
+            // HERE!!!!!!
+            if (newsName === '조선일보') {
+              data.publishers[newsName] = {
+                nlink: completeURL(newsLink),
+                articles: []
+              }
             }
           });
 
