@@ -391,18 +391,6 @@ function crawlNews() {
           }
         }
       )
-    },
-    function saveToFile(callback) {
-      fs.writeFile(data.date + '.json', JSON.stringify(data, null, 2),
-        function(err) {
-         if (err)
-            callback(err);
-          else {
-            console.log('completed saveToFile...');
-            callback(null);
-          }
-        }
-      );
     }
   ], function(err) {
     if (err) {
