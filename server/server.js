@@ -43,10 +43,14 @@ function selectNews(date, callback) {
 app.get('/', function(req, res) {
   var date = req.query.date;
   selectNews(date, function() {
+    res.set({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:3000'
+    })
+
     if (allNews.length != 0)
       res.json(allNews);
     else {
-      res.header("Content-Type",'application/json');
       res.json({
         error: "no data for " + date
       });
