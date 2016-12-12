@@ -2,6 +2,7 @@
  * Created by edchoi on 12/8/16.
  */
 import React, { Component } from 'react';
+import Texture from './texture.jpg';
 
 class Square extends Component {
   constructor(props) {
@@ -24,35 +25,33 @@ class Square extends Component {
       position: 'relative',
       fontWeight: 'bold'
     };
+    const imgDivStyle = {
+      width: this.props.width,
+      height: this.props.height,
+      overflow: 'hidden',
+      position: 'relative',
+      verticalAlign: 'middle',
+      display: 'table-cell',
+    };
+    const imgStyle = {
+      position: 'absolute',
+      left: '-1000%',
+      right: '-1000%',
+      top: '-1000%',
+      bottom: '-1000%',
+      margin: 'auto',
+      minHeight: '100%',
+      minWidth: '100%',
+      opacity: 0.35,
+    };
 
     if (this.props.article.hasOwnProperty('img')){
-      const imgDivStyle = {
-        width: this.props.width,
-        height: this.props.height,
-        overflow: 'hidden',
-        position: 'relative',
-        verticalAlign: 'middle',
-        display: 'table-cell',
-      };
-      const imgStyle = {
-        position: 'absolute',
-        left: '-1000%',
-        right: '-1000%',
-        top: '-1000%',
-        bottom: '-1000%',
-        margin: 'auto',
-        minHeight: '100%',
-        minWidth: '100%',
-        opacity: 0.35,
-      };
-      const imgTitleStyle = Object.assign({}, titleStyle);
-
       return (
         <div>
           <div className="imgDiv" style={imgDivStyle}>
             <img src={this.props.article.img} style={imgStyle}/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
-              <p style={imgTitleStyle}>{this.props.article.headline}</p>
+              <p style={titleStyle}>{this.props.article.headline}</p>
             </div>
           </div>
         </div>
@@ -60,7 +59,13 @@ class Square extends Component {
     } else {
       return (
         <div>
-          <p style={titleStyle}>{this.props.article.headline}</p>
+          {/*<p style={titleStyle}>{this.props.article.headline}</p>*/}
+          <div className="imgDiv" style={imgDivStyle}>
+            <img src={Texture} style={imgStyle}/>
+            <div style={{width: '80%', left: '10%', position: 'relative'}}>
+              <p style={titleStyle}>{this.props.article.headline}</p>
+            </div>
+          </div>
         </div>
       );
     }
