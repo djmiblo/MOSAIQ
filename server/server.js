@@ -45,7 +45,8 @@ app.get('/', function(req, res) {
   selectNews(date, function() {
     res.set({
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:3000'
+      'Access-Control-Allow-Methods': 'GET',
+      'Access-Control-Allow-Origin': '*'
     })
 
     if (allNews.length != 0)
