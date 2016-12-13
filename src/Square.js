@@ -5,13 +5,9 @@ import React, { Component } from 'react';
 import Texture from './texture.jpg';
 
 class Square extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   getFontSize() {
-    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.004;
-    const minimumSize = 11;
+    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035;
+    const minimumSize = 12;
     return sizeByCell > minimumSize? sizeByCell : minimumSize;
   }
 
@@ -49,7 +45,7 @@ class Square extends Component {
       return (
         <div>
           <div className="imgDiv" style={imgDivStyle}>
-            <img src={this.props.article.img} style={imgStyle}/>
+            <img src={this.props.article.img} style={imgStyle} alt="article img"/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
               <p style={titleStyle}>{this.props.article.headline}</p>
             </div>
@@ -61,7 +57,7 @@ class Square extends Component {
         <div>
           {/*<p style={titleStyle}>{this.props.article.headline}</p>*/}
           <div className="imgDiv" style={imgDivStyle}>
-            <img src={Texture} style={imgStyle}/>
+            <img src={Texture} style={imgStyle} alt="article img"/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
               <p style={titleStyle}>{this.props.article.headline}</p>
             </div>

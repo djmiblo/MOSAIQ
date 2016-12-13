@@ -9,14 +9,13 @@ class Row extends Component {
   constructor(props) {
     super(props);
     this.rowHeight = 5;
-    // this.numberOfRows = Math.ceil(((window.innerHeight - 50)/this.rowHeight) * 0.95);
-    this.numberOfRows = Math.ceil(this.props.height/this.rowHeight);
     this.rowStyle = {
-      height: 5
+      height: this.rowHeight
     }
   }
 
   render() {
+    this.numberOfRows = Math.ceil(this.props.height/this.rowHeight);
     let columns = this.makeColumnsFromArticles(this.props.articles.slice());
     let layout = this.makeCustomLayout(columns);
     return (
@@ -35,12 +34,12 @@ class Row extends Component {
     let numberOfColumns = this.getNumberOfColumns(articles.slice());
     let totalLength = articles.reduce((a,b) => a + b.length, 0);
     let columns = [];
-    if (articles.length == numberOfColumns) {
+    if (articles.length === numberOfColumns) {
       for (let i=0;i<numberOfColumns;i++) {
         let article = articles[articles.length - 1 - i];
         columns.push(this.makeColumn([article],[1],article.length/totalLength * 100));
       }
-    } else if (numberOfColumns == 2) {
+    } else if (numberOfColumns === 2) {
       /* 기사 3개가 칼럼 2개로 나눠졌을 경우 */
       let longestArticle = articles.pop();
       columns.push(this.makeColumn([longestArticle],[1],longestArticle.length/totalLength * 100));
@@ -50,7 +49,7 @@ class Row extends Component {
   }
 
   getNumberOfColumns(articles) {
-    if (articles.length != 3)
+    if (articles.length !== 3)
       return articles.length;
     else {
       articles.sort(function (a, b) {
@@ -73,10 +72,10 @@ class Row extends Component {
       articles: [],
       rowSpans: [this.numberOfRows]
     };
-    if (articles.length == 1) {
+    if (articles.length === 1) {
       rowSpans = [100];
     }
-    if (articles.length < 1 || rowSpans.length != articles.length) {
+    if (articles.length < 1 || rowSpans.length !== articles.length) {
       return defaultColumn;
     }
 
@@ -107,19 +106,19 @@ class Row extends Component {
 
   makeCustomLayout(columns) {
     columns = this.processWidth(columns);
-
+    const cellStyle = {verticalAlign:'middle', padding: '0px', borderLeft: '2px solid black', borderTop:'2px solid black'};
     let columnLayouts = [];
     for (let column of columns) {
       let cells = [];
       let rowSpans = column.rowSpans;
       let articles = column.articles;
       let totalRowSpan = 0;
-      while (rowSpans.length != 0) {
+      while (rowSpans.length !== 0) {
         let rowSpan = rowSpans.shift();
         let article = articles.shift();
         totalRowSpan += rowSpan;
         cells.push((
-          <td onClick={() => this.props.onClick(article)} rowSpan={rowSpan} width={column.width} style={{verticalAlign:'middle', padding: '0px', borderLeft: '2px solid black', borderTop:'2px solid black'}}>
+          <td onClick={() => this.props.onClick(article)} rowSpan={rowSpan} width={column.width} style={cellStyle}>
             <Square height={this.rowHeight * rowSpan} width={column.width} article={article}/>
           </td>
         ));

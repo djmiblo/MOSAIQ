@@ -25,7 +25,7 @@ class Navbar extends Component {
           <ul className="nav navbar-nav navbar-left">
             <li><a href="#" onClick={this.props.onPrev}>Prev</a></li>
           </ul>
-          <div className="navbar-header" style={navbarStyle}>
+          <div className="navbar-header" style={navbarStyle} onClick={this.props.onTitle}>
             <a className="navbar-brand" href="#" style={brandStyle}>
               MOSAIQ
             </a>
