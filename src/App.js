@@ -74,8 +74,8 @@ class App extends Component {
     window.handleNext = this.handleClickNext;
     window.handleRight = this.handleRight;
     window.handleLeft = this.handleLeft;
-    window.handleOk = this.handleOk();
-    window.handleClose = this.handleClose();
+    window.handleOk = this.handleOk;
+    window.handleClose = this.handleClose;
     window.messageBus.onMessage = function(event) {
       if (event.data === 'next') {
         console.log('receiving chromecast message App');
