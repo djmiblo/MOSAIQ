@@ -37,8 +37,8 @@ class Remote extends Component {
         <button onClick={this.handleLeft} type="button">left</button>
         <button onClick={this.handleRight} type="button">right</button>
         <button onClick={this.handleDown} type="button">down</button>
-        <button onClcik={this.handlePrev} type="button">prev</button>
-        <button onClcik={this.handleNext} type="button">next</button>
+        <button onClick={this.handlePrev} type="button">prev</button>
+        <button onClick={this.handleNext} type="button">next</button>
       </div>
   );
   }
