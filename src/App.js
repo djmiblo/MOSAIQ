@@ -32,7 +32,7 @@ class App extends Component {
 
   addRemoteHandler() {
     // handler for the CastMessageBus message event
-    window.handlePrev = this.handleClickPrev();
+    window.handlePrev = this.handleClickPrev;
     window.handleNext = this.handleClickNext;
     window.messageBus.onMessage = function(event) {
       if (event.data === 'next') {
