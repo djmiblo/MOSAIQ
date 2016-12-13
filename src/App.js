@@ -56,7 +56,6 @@ class App extends Component {
         articles: json,
         currentArticles: app.getCurrentArticles(json.slice())
       });
-      console.log(json);
     }).catch(function(err) {
       console.log('fetch error');
       console.log(err);

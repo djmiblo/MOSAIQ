@@ -9,14 +9,13 @@ class Row extends Component {
   constructor(props) {
     super(props);
     this.rowHeight = 5;
-    // this.numberOfRows = Math.ceil(((window.innerHeight - 50)/this.rowHeight) * 0.95);
-    this.numberOfRows = Math.ceil(this.props.height/this.rowHeight);
     this.rowStyle = {
-      height: 5
+      height: this.rowHeight
     }
   }
 
   render() {
+    this.numberOfRows = Math.ceil(this.props.height/this.rowHeight);
     let columns = this.makeColumnsFromArticles(this.props.articles.slice());
     let layout = this.makeCustomLayout(columns);
     return (
