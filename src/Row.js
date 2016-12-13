@@ -29,19 +29,19 @@ class Row extends Component {
 
   makeColumnsFromArticles(articles) {
     articles.sort(function (a, b) {
-      return a.length - b.length;
+      return b.length - a.length;
     });
     let numberOfColumns = this.getNumberOfColumns(articles.slice());
     let totalLength = articles.reduce((a,b) => a + b.length, 0);
     let columns = [];
     if (articles.length === numberOfColumns) {
       for (let i=0;i<numberOfColumns;i++) {
-        let article = articles[articles.length - 1 - i];
+        let article = articles[i];
         columns.push(this.makeColumn([article],[1],article.length/totalLength * 100));
       }
     } else if (numberOfColumns === 2) {
       /* 기사 3개가 칼럼 2개로 나눠졌을 경우 */
-      let longestArticle = articles.pop();
+      let longestArticle = articles.shift();
       columns.push(this.makeColumn([longestArticle],[1],longestArticle.length/totalLength * 100));
       columns.push(this.makeColumn(articles, articles.map((item) => item.length), (1 - longestArticle.length/totalLength)*100));
     }

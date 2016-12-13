@@ -30,6 +30,18 @@ class Navbar extends Component {
               MOSAIQ
             </a>
           </div>
+          <ul className="nav navbar-nav navbar-right">
+            <li><a href="#" onClick={this.props.ok}>OK</a></li>
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <li><a href="#" onClick={this.props.left}>left</a></li>
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <li><a href="#" onClick={this.props.right}>right</a></li>
+          </ul>
+            <ul className="nav navbar-nav navbar-right">
+              <li><a href="#" onClick={this.props.testRemote}>TestRemote</a></li>
+            </ul>
             <ul className="nav navbar-nav navbar-right">
               <li><a href="#" onClick={this.props.onNext}>Next</a></li>
             </ul>

@@ -28,6 +28,12 @@ class Remote extends Component {
   handleNext() {
     window.sendMessage('next');
   };
+  handleOK() {
+    window.sendMessage('ok');
+  }
+  handleClose() {
+    window.sendMessage('close');
+  }
   render() {
     return (
       <div id="wrapper">
@@ -39,6 +45,8 @@ class Remote extends Component {
         <button onClick={this.handleDown} type="button">down</button>
         <button onClick={this.handlePrev} type="button">prev</button>
         <button onClick={this.handleNext} type="button">next</button>
+        <button onClick={this.handleOK} type="button">OK</button>
+        <button onClick={this.handleClose} type="button">Close</button>
       </div>
   );
   }

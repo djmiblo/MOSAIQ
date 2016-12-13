@@ -14,8 +14,6 @@ class Board extends Component {
     let articleHeights = articleRows.map((item) => {
       return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
     });
-    console.log('remote select');
-    console.log(this.props.remoteSelect);
     return (
       <div>
         {
@@ -27,13 +25,13 @@ class Board extends Component {
 
   divideArticles(articles) {
     articles.sort(function (a, b) {
-      return a.length - b.length;
+      return b.length - a.length;
     });
     const totalLength = articles.reduce((a,b)=>a + b.length, 0);
     let selectLength = 0;
     let selects = [];
     while (selectLength < totalLength * 0.55) {
-      let selectArticle = articles.pop();
+      let selectArticle = articles.shift();
       selects.push(selectArticle);
       selectLength += selectArticle.length;
     }
