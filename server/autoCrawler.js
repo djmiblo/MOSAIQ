@@ -330,7 +330,7 @@ function crawlNews() {
     function insertDB(fstCallback) {
       var client = mysql.createConnection({
         user: 'root',
-        password: 'ghkfkd',
+        password: '1q2w3e4r1!',
         database: 'MOSAIQ'
       })
 
