@@ -14,6 +14,7 @@ class Board extends Component {
     let articleHeights = articleRows.map((item) => {
       return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
     });
+    console.log('remote select');
     console.log(this.props.remoteSelect);
     return (
       <div>
