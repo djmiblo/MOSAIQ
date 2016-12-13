@@ -57,18 +57,19 @@ class App extends Component {
       headers: new Headers({
         'Content-Type': 'application/json'
       })
-    }).then(function(response) {
+    }).then(function (response) {
       console.log('got response');
       return response.json();
-    }).then(function(json){
+    }).then(function (json) {
       app.setState({
         articles: json,
         currentArticles: app.getCurrentArticles(json.slice())
       });
-    }).catch(function(err) {
+    }).catch(function (err) {
       console.log('fetch error');
       console.log(err);
     });
+  }
 
   render() {
     const article = this.state.current;
@@ -122,7 +123,8 @@ class App extends Component {
   }
 
   open(article) {
-    this.setState({ showModal: true, current: article});
+    this.setState({showModal: true, current: article});
+  }
 
   handleClickPrev() {
     let nextArticles = this.getCurrentArticles(this.articles);
