@@ -24,7 +24,19 @@ class Board extends Component {
   }
 
   divideArticles(articles) {
-    return [[articles[0], articles[1], articles[2]], [articles[3],articles[4], articles[5], articles[6]]];
+    articles.sort(function (a, b) {
+      return a.length - b.length;
+    });
+    const totalLength = articles.reduce((a,b)=>a + b.length, 0);
+    let selectLength = 0;
+    let selects = [];
+    while (selectLength < totalLength * 0.55) {
+      let selectArticle = articles.pop();
+      selects.push(selectArticle);
+      selectLength += selectArticle.length;
+    }
+
+    return [selects, articles];
   }
 
   getPreference() {
