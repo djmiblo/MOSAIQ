@@ -14,6 +14,7 @@ class App extends Component {
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.closeSetting = this.closeSetting.bind(this);
+    this.addRemoteHandler = this.addRemoteHandler.bind(this);
     // this.handleEvent = this.handleEvent.bind(this);
     this.state = {
       articles: [],
@@ -22,7 +23,9 @@ class App extends Component {
       page: 1,
       showModal: false,
       showSetting: false,
-      current: null
+      current: null,
+      isReceivingRemote: false,
+      remoteSelect: null
     };
     this.getArticlesFromServer();
     this.addRemoteHandler();
@@ -30,6 +33,8 @@ class App extends Component {
   }
 
   addRemoteHandler() {
+    let app = this;
+
     // handler for the 'ready' event
     window.castReceiverManager.onReady = function(event) {
       console.log('Received Ready event: ' + JSON.stringify(event.data));
@@ -40,6 +45,10 @@ class App extends Component {
     window.castReceiverManager.onSenderConnected = function(event) {
       console.log('Received Sender Connected event: ' + event.data);
       console.log(window.castReceiverManager.getSender(event.data).userAgent);
+      app.setState({
+        isReceivingRemote: true,
+        remoteSelect: {}
+      });
     };
 
     // handler for 'senderdisconnected' event
@@ -91,40 +100,6 @@ class App extends Component {
       console.log('fetch error');
       console.log(err);
     });
-  }
-
-  render() {
-    const article = this.state.current;
-    // handler for the CastMessageBus message event
-    window.handleClick = this.handleClickNext;
-    window.messageBus.onMessage = function(event) {
-      if (event.data == 'next') {
-        console.log('receiving chromecast message App');
-        window.handleClick();
-      }
-    };
-    window.castReceiverManager.start({statusText: "Application is starting"});
-    console.log('Receiver Manager started');
-    return (
-      <div className="App">
-        <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
-        <Board articles={this.state.currentArticles} onClick={this.open}/>
-
-        <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton>
-            <Modal.Title><p>{article ? article.headline : null}</p></Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {article? (<img style={{width: '100%'}} src={article.img}/>) : null}
-            {article? (article.img? <hr />:null): null}
-            <p>{article ? article.text : null}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.close}>Close</Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    );
   }
 
   getCurrentArticles(articles) {
@@ -186,7 +161,7 @@ class App extends Component {
       return (
         <div className="App">
           <Navbar onTitle={this.handleClickTitle} onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
-          <Board articles={this.state.currentArticles} onClick={this.open}/>
+          <Board isRemote={this.state.isReceivingRemote} remoteSelect={this.state.remoteSelect} articles={this.state.currentArticles} onClick={this.open}/>
 
           <Modal show={this.state.showModal} onHide={this.close}>
             <Modal.Header closeButton>

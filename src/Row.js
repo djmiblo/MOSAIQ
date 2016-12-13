@@ -107,6 +107,7 @@ class Row extends Component {
   makeCustomLayout(columns) {
     columns = this.processWidth(columns);
     const cellStyle = {verticalAlign:'middle', padding: '0px', borderLeft: '2px solid black', borderTop:'2px solid black'};
+    const selectCellStyle = Object.assign({}, cellStyle, {background: 'rgba(0,0,0,0.6)', color: 'white'});
     let columnLayouts = [];
     for (let column of columns) {
       let cells = [];
@@ -117,11 +118,17 @@ class Row extends Component {
         let rowSpan = rowSpans.shift();
         let article = articles.shift();
         totalRowSpan += rowSpan;
+        let isRemoteSelected = false;
+        if (this.props.remoteSelect != null && this.props.remoteSelect.hasOwnProperty('headline') &&
+          this.props.remoteSelect.headline == article.headline) {
+          isRemoteSelected = true;
+        }
         cells.push((
-          <td onClick={() => this.props.onClick(article)} rowSpan={rowSpan} width={column.width} style={cellStyle}>
+          <td onClick={() => this.props.onClick(article)} rowSpan={rowSpan} width={column.width} style={isRemoteSelected? selectCellStyle:cellStyle}>
             <Square height={this.rowHeight * rowSpan} width={column.width} article={article}/>
           </td>
         ));
+        
         while (cells.length < totalRowSpan) {
           cells.push(null);
         }
