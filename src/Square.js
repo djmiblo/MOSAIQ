@@ -6,7 +6,7 @@ import Texture from './texture.jpg';
 
 class Square extends Component {
   getFontSize() {
-    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.004;
+    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035;
     const minimumSize = 11;
     return sizeByCell > minimumSize? sizeByCell : minimumSize;
   }

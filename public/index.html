@@ -28,8 +28,7 @@
       To create a production bundle, use `npm run build`.
     -->
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
-  <   <script type="text/javascript">
-      window.onload = function() {
+    <script type="text/javascript">
         cast.receiver.logger.setLevelValue(0);
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
         console.log('Starting Receiver Manager');
@@ -74,11 +73,6 @@
           // sender message listener will be invoked
           window.messageBus.send(event.senderId, event.data);
         };
-
-        // initialize the CastReceiverManager with an application status message
-        window.castReceiverManager.start({statusText: "Application is starting"});
-        console.log('Receiver Manager started');
-      };
     </script>
   </body>
 </html>
