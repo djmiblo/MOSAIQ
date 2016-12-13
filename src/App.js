@@ -70,7 +70,6 @@ class App extends Component {
   }
 
   open(article) {
-    console.log(article);
     this.setState({ showModal: true, current: article});
   }
 
@@ -96,7 +95,7 @@ class App extends Component {
 
           <Modal show={this.state.showModal} onHide={this.close}>
             <Modal.Header closeButton>
-              <Modal.Title style={{textAlign: 'center'}}>
+              <Modal.Title style={{fontSize: '25px', textAlign: 'center'}}>
                 <p style={{ margin: '0px' }}>{article ? article.headline : null}</p>
               </Modal.Title>
             </Modal.Header>
