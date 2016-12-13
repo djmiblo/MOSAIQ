@@ -1,36 +1,43 @@
 import React, { Component } from 'react';
-import './App.css';
-import Navbar from './Navbar.js';
-import Board from './Board.js';
 import {Button, Modal} from 'react-bootstrap';
+import './App.css';
+import Navbar from './Navbar';
+import Board from './Board';
+import Remote from './Remote';
 
 class App extends Component {
   constructor() {
     super();
+    this.handleClickTitle = this.handleClickTitle.bind(this);
     this.handleClickPrev = this.handleClickPrev.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
+    this.closeSetting = this.closeSetting.bind(this);
     this.state = {
       articles: [],
       currentArticles: [],
       history: [],
       page: 1,
       showModal: false,
+      showSetting: false,
       current: null
     };
     this.getArticlesFromServer();
     this.addRemoteHandler();
-    // this.startReceiveCast();
+    this.startReceiveCast();
   }
 
   addRemoteHandler() {
     // handler for the CastMessageBus message event
-    window.handleClick = this.handleClickNext;
+    window.handlePrev = this.handleClickPrev();
+    window.handleNext = this.handleClickNext;
     window.messageBus.onMessage = function(event) {
       if (event.data === 'next') {
         console.log('receiving chromecast message App');
-        window.handleClick();
+        window.handleNext();
+      } else if (event.data == 'prev') {
+        window.handlePrev();
       }
     };
   }
@@ -62,7 +69,17 @@ class App extends Component {
     });
   }
 
-  componentWillMount() {
+  getCurrentArticles(articles) {
+    if (articles.length < 6)
+      return articles;
+    else {
+      let newCurrent = [];
+      while(newCurrent.length < 7) {
+        let item = articles[Math.floor(Math.random()*articles.length)];
+        newCurrent.push(item);
+      }
+      return newCurrent;
+    }
   }
 
   close() {
@@ -71,6 +88,10 @@ class App extends Component {
 
   open(article) {
     this.setState({ showModal: true, current: article});
+  }
+
+  closeSetting() {
+    this.setState({ showSetting: false });
   }
 
   render() {
@@ -90,7 +111,7 @@ class App extends Component {
       }
       return (
         <div className="App">
-          <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
+          <Navbar onTitle={this.handleClickTitle} onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
           <Board articles={this.state.currentArticles} onClick={this.open}/>
 
           <Modal show={this.state.showModal} onHide={this.close}>
@@ -102,10 +123,24 @@ class App extends Component {
             <Modal.Body>
               {article? (article.img != "" ? (<img style={{width: '100%'}} src={article.img} alt="article img"/>):null) : null}
               {article? (article.img != "" ? <hr />:null): null}
-              <p>{article ? articleBodyComponent : null}</p>
+              <div>{article ? articleBodyComponent : null}</div>
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.close}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal show={this.state.showSetting} onHide={this.closeSetting}>
+            <Modal.Header closeButton>
+              <Modal.Title style={{fontSize: '25px', textAlign: 'center'}}>
+                Setting
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Remote/>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.closeSetting}>Close</Button>
             </Modal.Footer>
           </Modal>
         </div>
@@ -113,20 +148,7 @@ class App extends Component {
     }
   }
 
-  getCurrentArticles(articles) {
-    if (articles.length < 6)
-      return articles;
-    else {
-      let newCurrent = [];
-      while(newCurrent.length < 7) {
-        let item = articles[Math.floor(Math.random()*articles.length)];
-        newCurrent.push(item);
-      }
-      return newCurrent;
-    }
-  }
-
-  handleClickPrev(e) {
+  handleClickPrev() {
     if (this.state.page === 1)
       return;
 
@@ -139,7 +161,7 @@ class App extends Component {
     });
   }
 
-  handleClickNext(e) {
+  handleClickNext() {
     let nextArticles = this.getCurrentArticles(this.state.articles);
     let history = this.state.history.slice();
     history.push(this.state.currentArticles);
@@ -147,6 +169,12 @@ class App extends Component {
       currentArticles: nextArticles,
       history: history,
       page: this.state.page + 1
+    });
+  }
+
+  handleClickTitle() {
+    this.setState({
+      showSetting: true
     });
   }
 }
