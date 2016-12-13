@@ -14,14 +14,10 @@ class Board extends Component {
     let articleHeights = articleRows.map((item) => {
       return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
     });
-    let remoteSelect = this.props.remoteSelect;
-    if (remoteSelect != null && !remoteSelect.hasOwnProperty('headline')) {
-      remoteSelect = Object.assign({},articleRows[0][0]);
-    }
     return (
       <div>
         {
-          articleRows.map((item, i) => (<Row remoteSelect={remoteSelect} key={i} articles={item} height={articleHeights[i]} onClick={this.props.onClick}/>))
+          articleRows.map((item, i) => (<Row remoteSelect={this.props.remoteSelect} key={i} articles={item} height={articleHeights[i]} onClick={this.props.onClick}/>))
         }
       </div>
     );

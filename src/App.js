@@ -11,6 +11,8 @@ class App extends Component {
     this.handleClickTitle = this.handleClickTitle.bind(this);
     this.handleClickPrev = this.handleClickPrev.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
+    this.handleRight = this.handleRight.bind(this);
+    this.handleLeft = this.handleLeft.bind(this);
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.closeSetting = this.closeSetting.bind(this);
@@ -25,7 +27,8 @@ class App extends Component {
       showSetting: false,
       current: null,
       isReceivingRemote: false,
-      remoteSelect: null
+      remoteSelect: null,
+      selectIndex: 0
     };
     this.getArticlesFromServer();
     this.addRemoteHandler();
@@ -34,7 +37,6 @@ class App extends Component {
 
   addRemoteHandler() {
     let app = this;
-
     // handler for the 'ready' event
     window.castReceiverManager.onReady = function(event) {
       console.log('Received Ready event: ' + JSON.stringify(event.data));
@@ -47,7 +49,7 @@ class App extends Component {
       console.log(window.castReceiverManager.getSender(event.data).userAgent);
       app.setState({
         isReceivingRemote: true,
-        remoteSelect: {}
+        remoteSelect: app.state.currentArticles[0]
       });
     };
 
@@ -66,12 +68,18 @@ class App extends Component {
     // handler for the CastMessageBus message event
     window.handlePrev = this.handleClickPrev;
     window.handleNext = this.handleClickNext;
+    window.handleRight = this.handleRight;
+    window.handleLeft = this.handleLeft;
     window.messageBus.onMessage = function(event) {
       if (event.data === 'next') {
         console.log('receiving chromecast message App');
         window.handleNext();
       } else if (event.data == 'prev') {
         window.handlePrev();
+      } else if (event.data == 'right') {
+        window.handleRight();
+      } else if (event.data == 'left') {
+        window.handleLeft();
       }
     };
   }
@@ -107,10 +115,16 @@ class App extends Component {
       return articles;
     else {
       let newCurrent = [];
+      let lastIndex = -1;
       while(newCurrent.length < 7) {
-        let item = articles[Math.floor(Math.random()*articles.length)];
-        newCurrent.push(item);
+        let index = Math.floor(Math.random()*articles.length);
+        let item = articles[index];
+        if (lastIndex != index){
+          newCurrent.push(item);
+          lastIndex = index;
+        }
       }
+      newCurrent.sort((a, b) => b.length - a.length);
       return newCurrent;
     }
   }
@@ -137,6 +151,26 @@ class App extends Component {
       currentArticles: nextArticles,
       page: this.state.page + 1
     });
+  }
+
+  handleRight() {
+    let selectIndex = this.state.selectIndex;
+    if (selectIndex < this.state.articles.length - 1) {
+      this.setState({
+        selectIndex: selectIndex + 1,
+        remoteSelect: this.state.currentArticles[selectIndex + 1]
+      });
+    }
+  }
+
+  handleLeft() {
+    let selectIndex = this.state.selectIndex;
+    if (selectIndex > 0) {
+      this.setState({
+        selectIndex: selectIndex - 1,
+        remoteSelect: this.state.currentArticles[selectIndex - 1]
+      });
+    }
   }
 
   closeSetting() {
