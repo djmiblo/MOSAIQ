@@ -193,6 +193,7 @@ function crawlNews() {
             data.date = dateGot;
           })
 
+          console.log('completed scrapePublisher...');
           callback(null);
         } else {
           callback('error while getting publisher');
@@ -236,6 +237,7 @@ function crawlNews() {
         }, 
         function(err, result) {
           if (!err) {
+            console.log('completed scrapeArticleLink...');
             callback(null);
           } else {
             callback(err);
@@ -285,14 +287,20 @@ function crawlNews() {
                     $('div.article_header_title_box > h2.subject').text();
                   filterAd(publisherName, $);
                   articleData.body = $('#dic_area').html().
-                    replace(/data\-src/g, 'src').
-                    replace(/(\<img.+)(\>)/g, '$1\\$2').
-                    replace(/(\<br)(\>)/g, '$1\\$2');
+                    replace(/(\<img.+)(\>)/g, '').
+                    replace(/(\<br)(\>)/g, '$1\/$2');
+
+                  var imgsrc = [];
+                  $('#dic_area').find('img').each(function(idx) {
+                    imgsrc.push($(this).attr('data-src'));
+                  })
+                  articleData.img = imgsrc;
 
                   data.publishers[publisherName].articles.push(articleData);
 
                   trdCallback(null);
                 } else {
+                  console.log(error);
                   trdCallback('error in trdCallback');
                 }
               })
@@ -310,6 +318,7 @@ function crawlNews() {
         },
         function(err) {
           if (!err) {
+            console.log('completed scrapeArticles...');
             fstCallback(null);
           } else {
             fstCallback(err);
@@ -321,7 +330,7 @@ function crawlNews() {
     function insertDB(fstCallback) {
       var client = mysql.createConnection({
         user: 'root',
-        password: 'ghkfkd',
+        password: '1q2w3e4r1!',
         database: 'MOSAIQ'
       })
 
@@ -352,9 +361,10 @@ function crawlNews() {
               var headline = article.headline;
               var body = article.body;
               var alink = article.alink;
+              var imgsrc = article.img.join(',');
 
-              client.query('INSERT INTO news (date, publisher, headline, body, link) VALUES (?,?,?,?,?)', [
-                date, name, headline, body, alink
+              client.query('INSERT INTO news (date, publisher, headline, body, img, link) VALUES (?,?,?,?,?,?)', [
+                date, name, headline, body, imgsrc, alink
               ], function(err, data) {
                 if (err) {
                   console.log(err);
@@ -375,20 +385,12 @@ function crawlNews() {
         function(err) {
           if (err)
             fstCallback(err);
-          else
+          else {
+            console.log('completed insertDB...');
             fstCallback(null);
+          }
         }
       )
-    },
-    function saveToFile(callback) {
-      fs.writeFile(data.date + '.json', JSON.stringify(data, null, 2),
-        function(err) {
-         if (err)
-            callback(err);
-          else {
-            callback(null);
-          }
-        });
     }
   ], function(err) {
     if (err) {
