@@ -6,10 +6,6 @@ import Navbar from './Navbar'
 import Row from './Row';
 
 class Board extends Component {
-  constructor() {
-    super();
-  }
-
   render() {
     let articles = this.props.articles.slice();
     let articleRows = this.divideArticles(articles.slice());
@@ -18,20 +14,10 @@ class Board extends Component {
     let articleHeights = articleRows.map((item) => {
       return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
     });
-    //
-    // console.log(articles.length);
-    // console.log(articleRows[0].length + articleRows[1].length);
-    // console.log('total available height: ' + totalAvailHeight);
-    // console.log(totalAvailHeight == (articleHeights[0] + articleHeights[1]));
-    // if (totalAvailHeight != (articleHeights[0] + articleHeights[1])) {
-    //   console.log(articles);
-    //   console.log(articleRows);
-    // }
-
     return (
       <div>
         {
-          articleRows.map((item, i) => (<Row articles={item} height={articleHeights[i]} onClick={this.props.onClick}/>))
+          articleRows.map((item, i) => (<Row key={i} articles={item} height={articleHeights[i]} onClick={this.props.onClick}/>))
         }
       </div>
     );

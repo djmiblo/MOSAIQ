@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import Navbar from './Navbar.js'
-import Board from './Board.js'
-import {Button, Modal} from 'react-bootstrap'
+import Navbar from './Navbar.js';
+import Board from './Board.js';
+import {Button, Modal} from 'react-bootstrap';
 
 class App extends Component {
   constructor() {
@@ -32,6 +32,36 @@ class App extends Component {
 
   render() {
     const article = this.state.current;
+    // handler for the CastMessageBus message event
+    window.handleClick = this.handleClickNext;
+    window.messageBus.onMessage = function(event) {
+      if (event.data === 'next') {
+        console.log('receiving chromecast message App');
+        window.handleClick();
+      }
+    };
+
+    // url (required), options (optional)
+    fetch('http://shinia.net/gisa?date=20161212', {
+      method: 'get',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    }).then(function(response) {
+      // console.log(response);
+      console.log('got response');
+      return response.json();
+    }).then(function(json){
+      console.log(json);
+      }
+    ).catch(function(err) {
+      // Error :(
+      alert('fetch error!');
+      console.log(err);
+    });
+
+    // window.castReceiverManager.start({statusText: "Application is starting"});
+    // console.log('Receiver Manager started');
     return (
       <div className="App">
         <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
@@ -42,7 +72,7 @@ class App extends Component {
             <Modal.Title><p>{article ? article.headline : null}</p></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {article? (<img style={{width: '100%'}} src={article.img}/>) : null}
+            {article? (<img style={{width: '100%'}} src={article.img} alt="article img"/>) : null}
             {article? (article.img? <hr />:null): null}
             <p>{article ? article.text : null}</p>
           </Modal.Body>
