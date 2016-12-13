@@ -15,7 +15,6 @@ class App extends Component {
     this.close = this.close.bind(this);
     this.closeSetting = this.closeSetting.bind(this);
     // this.handleEvent = this.handleEvent.bind(this);
-
     this.state = {
       articles: [],
       currentArticles: [],
@@ -31,6 +30,30 @@ class App extends Component {
   }
 
   addRemoteHandler() {
+    // handler for the 'ready' event
+    window.castReceiverManager.onReady = function(event) {
+      console.log('Received Ready event: ' + JSON.stringify(event.data));
+      window.castReceiverManager.setApplicationState("Application status is ready...");
+    };
+
+    // handler for 'senderconnected' event
+    window.castReceiverManager.onSenderConnected = function(event) {
+      console.log('Received Sender Connected event: ' + event.data);
+      console.log(window.castReceiverManager.getSender(event.data).userAgent);
+    };
+
+    // handler for 'senderdisconnected' event
+    window.castReceiverManager.onSenderDisconnected = function(event) {
+      console.log('Received Sender Disconnected event: ' + event.data);
+      if (window.castReceiverManager.getSenders().length == 0) {
+        window.close();
+      }
+    };
+
+    // create a CastMessageBus to handle messages for a custom namespace
+    window.messageBus =
+      window.castReceiverManager.getCastMessageBus(
+        'urn:x-cast:com.text.caster');
     // handler for the CastMessageBus message event
     window.handlePrev = this.handleClickPrev;
     window.handleNext = this.handleClickNext;
@@ -47,7 +70,6 @@ class App extends Component {
   startReceiveCast() {
     /* CastReceiver 실행하는 부분 */
     window.castReceiverManager.start({statusText: "Application is starting"});
-    console.log('Receiver Manager started');
   }
 
   getArticlesFromServer() {
