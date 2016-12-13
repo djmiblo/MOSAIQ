@@ -39,7 +39,6 @@ class App extends Component {
   }
 
   addRemoteHandler() {
-    let app = this;
     const articles = this.state.currentArticles;
     // handler for the 'ready' event
     window.castReceiverManager.onReady = function(event) {
@@ -51,7 +50,7 @@ class App extends Component {
     window.castReceiverManager.onSenderConnected = function(event) {
       console.log('Received Sender Connected event: ' + event.data);
       console.log(window.castReceiverManager.getSender(event.data).userAgent);
-      app.setState({
+      this.setState({
         isReceivingRemote: true,
         remoteSelect: articles[0]
       });
