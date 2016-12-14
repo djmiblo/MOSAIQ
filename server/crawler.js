@@ -323,7 +323,7 @@ function crawlNews() {
                 type: beforeData.type
               };
 
-              request(beforeData.alink, function(error, response, html) {
+              request(beforeData.alink, {timeout: 300000}, function(error, response, html) {
                 if (!error) {
                   var $ = cheerio.load(html);
 
