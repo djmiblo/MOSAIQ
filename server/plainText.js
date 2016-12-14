@@ -1,8 +1,6 @@
 var http = require('http');
 var express = require('express');
-var xml = require('xml');
 var bodyParser = require('body-parser');
-var fs = require('fs');
 var mysql = require('mysql');
 require("jsdom").env("", function(err, window) {
   if (err) {
@@ -51,7 +49,7 @@ function selectNews(date, callback) {
       else {
         allNews = [];
         rows.forEach(function(value) {
-          value.body = decodeStr(body);
+          value.body = decodeStr(value.body);
           allNews.push(value);
         })
         callback();
