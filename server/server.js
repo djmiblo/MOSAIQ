@@ -30,7 +30,7 @@ function selectNews(date, callback) {
     database: 'MOSAIQ'
   })
 
-  client.query('SELECT date, publisher, headline, body, img FROM news WHERE date=?', [date],
+  client.query('SELECT date, publisher, type, headline, body, img FROM news WHERE date=?', [date],
     function(err, rows) {
       if (err)
         console.log(err);
