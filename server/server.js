@@ -11,7 +11,13 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
+if (process.argv.length < 3) {
+  console.log('Usage: node server.js <password>');
+  process.exit();
+}
+
 var allNews = [];
+var DBpassword = process.argv[2];
 
 function calcLen(str) {
   return parseInt(str.length / 8);
@@ -20,7 +26,7 @@ function calcLen(str) {
 function selectNews(date, callback) {
   var client = mysql.createConnection({
     user: 'root',
-    password: '1q2w3e4r1!',
+    password: DBpassword,
     database: 'MOSAIQ'
   })
 
