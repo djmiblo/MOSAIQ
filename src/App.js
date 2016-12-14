@@ -6,6 +6,10 @@ import Board from './Board';
 import Remote from './Remote';
 import $ from 'jquery';
 
+// const server = "http://52.79.104.225:41212/";
+const server = "http://localhost:41212";
+let date = "?date=20161214";
+
 class App extends Component {
   constructor() {
     super();
@@ -111,7 +115,7 @@ class App extends Component {
 
   getArticlesFromServer() {
     const app = this;
-    fetch('http://shinia.net/gisa?date=20161212', {
+    fetch(server + date, {
       method: 'get',
       headers: new Headers({
         'Content-Type': 'application/json'
