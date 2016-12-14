@@ -59,6 +59,30 @@ function crawlNews() {
     return 'http://m.news.naver.com' + url;
   }
 
+  function getType(str) {
+    var regexp = /면(.+)$/;
+    str.match(regexp, str);
+    var type = RegExp.$1;
+
+    if (type.match(/정치/) != null) {
+      return '정치';
+    } else if (type.match(/경제/) != null) {
+      return '경제';
+    } else if (type.match(/사회/) != null) {
+      return '사회';
+    } else if (type.match(/세계/) != null) {
+      return '세계';
+    } else if (type.match(/IT/) != null) {
+      return 'IT';
+    } else if (type.match(/스포츠/) != null) {
+      return '스포츠';
+    } else if (type.match(/문화/) != null) {
+      return '문화';
+    } else {
+      return '';
+    }
+  }
+
   function filterAd(publisher, $) {
     if (publisher === '전자신문') {
       $('#dic_area a').has('strong').remove();
@@ -188,15 +212,9 @@ function crawlNews() {
               return true;
             }
 
-            // testing only with this paper!!!
-            // testing only with this paper!!!
-            // testing only with this paper!!!
-            // testing only with this paper!!!
-            if (newsName == '조선일보') {
-              data.publishers[newsName] = {
-                nlink: completeURL(newsLink),
-                articles: []
-              }
+            data.publishers[newsName] = {
+              nlink: completeURL(newsLink),
+              articles: []
             }
           });
 
@@ -238,9 +256,16 @@ function crawlNews() {
 
               $('._persist_wrap').children().each(function() {
                 if ( $(this).hasClass('newspaper_wrp') ) {
+                  var alink;
+                  var h3 = $(this).find('h3').text();
+                  var type = getType(h3);
+
                   $(this).find('a').each(function() {
-                    var alink = completeURL( $(this).attr('href') );
-                    data.publishers[name].articles.push(alink);
+                    alink = completeURL( $(this).attr('href') );
+                    data.publishers[name].articles.push({
+                      alink: alink,
+                      type: type
+                    });
                   })
                 }
               })
@@ -292,10 +317,13 @@ function crawlNews() {
               return leftArticles.length > 0;
             },
             function(trdCallback) {
-              var link = leftArticles.pop();
-              var articleData = { alink: link };
+              var beforeData = leftArticles.pop();
+              var articleData = { 
+                alink: beforeData.alink,
+                type: beforeData.type
+              };
 
-              request(link, function(error, response, html) {
+              request(beforeData.alink, function(error, response, html) {
                 if (!error) {
                   var $ = cheerio.load(html);
 
@@ -378,9 +406,10 @@ function crawlNews() {
               var body = article.body;
               var alink = article.alink;
               var imgsrc = article.img.join(',');
+              var type = article.type;
 
-              client.query('INSERT INTO news (date, publisher, headline, body, img, link) VALUES (?,?,?,?,?,?)', [
-                date, name, headline, body, imgsrc, alink
+              client.query('INSERT INTO news (date, publisher, headline, body, img, link, type) VALUES (?,?,?,?,?,?,?)', [
+                date, name, headline, body, imgsrc, alink, type
               ], function(err, data) {
                 if (err) {
                   console.log(err);
