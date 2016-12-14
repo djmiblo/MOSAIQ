@@ -65,7 +65,21 @@ function crawlNews() {
     var subtitle = RegExp.$1;
 
     var type = '';
-    if (name === '매일경제') {
+    if (subtitle.match(/^정치$/) != null) {
+      type = '정치';
+    } else if (subtitle.match(/^경제$/) != null) {
+      type = '경제';
+    } else if (subtitle.match(/^사회$/) != null) {
+      type = '사회';
+    } else if (subtitle.match(/^국제$/) != null) {
+      type = '국제';
+    } else if (subtitle.match(/^기술$/) != null) {
+      type = '기술';
+    } else if (subtitle.match(/^스포츠$/) != null) {
+      type = '스포츠';
+    } else if (subtitle.match(/^문화$/) != null) {
+      type = '문화';
+    } else if (name === '매일경제') {
       if (subtitle.match(/^정치$/) != null)
         type = '정치';
       else if (subtitle.match(/^경제\ 종합$/) != null)
