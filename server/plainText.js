@@ -78,14 +78,6 @@ function selectNews(callback) {
       else {
         allNews = [];
 
-        console.log(countType['정치']);
-        console.log(countType['국제']);
-        console.log(countType['경제']);
-        console.log(countType['기술']);
-        console.log(countType['문화']);
-        console.log(countType['스포츠']);
-        console.log(countType['사회']);
-
         rows.forEach(function(value) {
           if (countType[value.type] > 0) {
             value.body = decodeStr(value.body);
