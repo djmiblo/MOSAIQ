@@ -59,28 +59,112 @@ function crawlNews() {
     return 'http://m.news.naver.com' + url;
   }
 
-  function getType(str) {
+  function getType(name, str) {
     var regexp = /면(.+)$/;
     str.match(regexp, str);
-    var type = RegExp.$1;
+    var subtitle = RegExp.$1;
 
-    if (type.match(/정치/) != null) {
-      return '정치';
-    } else if (type.match(/경제/) != null) {
-      return '경제';
-    } else if (type.match(/사회/) != null) {
-      return '사회';
-    } else if (type.match(/세계/) != null) {
-      return '세계';
-    } else if (type.match(/IT/) != null) {
-      return 'IT';
-    } else if (type.match(/스포츠/) != null) {
-      return '스포츠';
-    } else if (type.match(/문화/) != null) {
-      return '문화';
+    var type = '';
+    if (name === '매일경제') {
+      if (subtitle.match(/^정치$/) != null)
+        type = '정치';
+      else if (subtitle.match(/^경제\ 종합$/) != null)
+        type = '경제';
+      else if (subtitle.match(/^경제\·금융$/) != null)
+        type = '경제';
+      else if (subtitle.match(/^기업\ \&\ 증권$/) != null)
+        type = '경제';
+      else if (subtitle.match(/^부동산$/) != null)
+        type = '경제';
+      else if (subtitle.match(/^사회$/) != null)
+        type = '사회';
+      else if (subtitle.match(/^국제$/) != null)
+        type = '세계';
+      else if (subtitle.match(/^모바일$/) != null)
+        type = 'IT';
+    } else if (name === '한국일보') {
+      if (subtitle.match(/^정치$/) != null)
+        type = '정치';
+      else if (subtitle.match(/^스포츠$/) != null)
+        type = '스포츠';
+    } else if (name === '파이낸셜뉴스') {
+      if (subtitle.match(/^정치$/) != null)
+        type = '정치';
+      else if (subtitle.match(/^정보\·과학$/) != null)
+        type = 'IT';
+    } else if (name === '서울경제') {
+      if (subtitle.match(/^정치$/) != null)
+        type = '정치';
+    } else if (name === '한국경제') {
+      if (subtitle.match(/^정치$/) != null)
+        type = '정치';
+    } else if (name === '조선일보') {
+      if (subtitle.match(/^경제종합$/) != null)
+        type = '경제';
+      else if (subtitle.match(/^경제\ 이슈$/) != null)
+        type = '경제';
+      else if (subtitle.match(/^사회$/) != null)
+        type = '사회';
+      else if (subtitle.match(/^국제$/) != null)
+        type = '세계';
+      else if (subtitle.match(/^스포츠$/) != null)
+        type = '스포츠';
+      else if (subtitle.match(/^문화$/) != null)
+        type = '문화';
+    } else if (name === '한겨레') {
+      if (subtitle.match(/^경제$/) != null)
+        type = '경제';
+      else if (subtitle.match(/^시민과\ 사회$/) != null)
+        type = '사회';
+      else if (subtitle.match(/^국제$/) != null)
+        type = '세계';
+      else if (subtitle.match(/^문화$/) != null)
+        type = '문화';
+    } else if (name === '전자신문') {
+      if (subtitle.match(/^통신방송$/) != null)
+        type = 'IT';
+      else if (subtitle.match(/^SW\/콘텐츠$/) != null)
+        type = 'IT';
+      else if (subtitle.match(/^전자\/자동차$/) != null)
+        type = 'IT';
+    } else if (name === '머니투데이') {
+      if (subtitle.match(/^국제$/) != null)
+        type = '세계';
+      else if (subtitle.match(/^ICT\·과학$/) != null)
+        type = 'IT';
+      else if (subtitle.match(/^문화$/) != null)
+        type = '문화';
+    } else if (name === '경향신문') {
+      if (subtitle.match(/^사회$/) != null)
+        type = '사회';
+      else if (subtitle.match(/^국제$/) != null)
+        type = '세계';
+      else if (subtitle.match(/^스포츠$/) != null)
+        type = '스포츠';
+    } else if (name === '세계일보') {
+      if (subtitle.match(/^스포츠$/) != null)
+        type = '스포츠';
+      else if (subtitle.match(/^문화$/) != null)
+        type = '문화';
     } else {
-      return '';
+      if (subtitle.match(/^정치$/) != null) {
+        type = '정치';
+      } else if (subtitle.match(/^경제$/) != null) {
+        type = '경제';
+      } else if (subtitle.match(/^사회$/) != null) {
+        type = '사회';
+      } else if (subtitle.match(/^세계$/) != null) {
+        type = '세계';
+      } else if (subtitle.match(/^IT$/) != null) {
+        type = 'IT';
+      } else if (subtitle.match(/^스포츠$/) != null) {
+        type = '스포츠';
+      } else if (subtitle.match(/^문화$/) != null) {
+        type = '문화';
+      }
     }
+
+    return type;
   }
 
   function filterAd(publisher, $) {
@@ -258,7 +342,7 @@ function crawlNews() {
                 if ( $(this).hasClass('newspaper_wrp') ) {
                   var alink;
                   var h3 = $(this).find('h3').text();
-                  var type = getType(h3);
+                  var type = getType(name, h3);
 
                   $(this).find('a').each(function() {
                     alink = completeURL( $(this).attr('href') );
