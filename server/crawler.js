@@ -88,7 +88,7 @@ function crawlNews() {
       $('#dic_area a').has('strong').remove();
     } else if (publisher === '동아일보') {
       var replaced = $('#dic_area').html()
-      .replace(/\[&#xB3D9;&#xC544;&#xC77C;&#xBCF4;\]<br></g, '');
+      .replace(/\[&#xB3D9;&#xC544;&#xC77C;&#xBCF4;\]<br>/g, '');
       $('#dic_area').html(replaced);
       $('#dic_area strong').has('a').remove();
     } else if (publisher === '아시아경제') {
