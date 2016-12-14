@@ -11,7 +11,6 @@ require("jsdom").env("", function(err, window) {
     console.error(err);
     return;
   }
-
   jQuery = require("jquery")(window);
 });
 
