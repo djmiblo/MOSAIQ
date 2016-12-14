@@ -79,9 +79,9 @@ function crawlNews() {
       else if (subtitle.match(/^사회$/) != null)
         type = '사회';
       else if (subtitle.match(/^국제$/) != null)
-        type = '세계';
+        type = '국제';
       else if (subtitle.match(/^모바일$/) != null)
-        type = 'IT';
+        type = '기술';
     } else if (name === '한국일보') {
       if (subtitle.match(/^정치$/) != null)
         type = '정치';
@@ -91,13 +91,23 @@ function crawlNews() {
       if (subtitle.match(/^정치$/) != null)
         type = '정치';
       else if (subtitle.match(/^정보\·과학$/) != null)
-        type = 'IT';
+        type = '기술';
     } else if (name === '서울경제') {
       if (subtitle.match(/^정치$/) != null)
         type = '정치';
+      else if (subtitle.match(/^ICT\&$/) != null)
+        type = '기술';
+      else if (subtitle.match(/^미디어\&콘텐츠$/) != null)
+        type = '기술';
     } else if (name === '한국경제') {
       if (subtitle.match(/^정치$/) != null)
         type = '정치';
+      else if (subtitle.match(/^문화\·바둑$/) != null)
+        type = '문화';
+      else if (subtitle.match(/^기업\&IT$/) != null)
+        type = '기술';
+      else if (subtitle.match(/^엔터테인먼트$/) != null)
+        type = '문화';
     } else if (name === '조선일보') {
       if (subtitle.match(/^경제종합$/) != null)
         type = '경제';
@@ -106,7 +116,7 @@ function crawlNews() {
       else if (subtitle.match(/^사회$/) != null)
         type = '사회';
       else if (subtitle.match(/^국제$/) != null)
-        type = '세계';
+        type = '국제';
       else if (subtitle.match(/^스포츠$/) != null)
         type = '스포츠';
       else if (subtitle.match(/^문화$/) != null)
@@ -117,34 +127,61 @@ function crawlNews() {
       else if (subtitle.match(/^시민과\ 사회$/) != null)
         type = '사회';
       else if (subtitle.match(/^국제$/) != null)
-        type = '세계';
+        type = '국제';
       else if (subtitle.match(/^문화$/) != null)
         type = '문화';
     } else if (name === '전자신문') {
       if (subtitle.match(/^통신방송$/) != null)
-        type = 'IT';
+        type = '기술';
       else if (subtitle.match(/^SW\/콘텐츠$/) != null)
-        type = 'IT';
+        type = '기술';
       else if (subtitle.match(/^전자\/자동차$/) != null)
-        type = 'IT';
+        type = '기술';
     } else if (name === '머니투데이') {
       if (subtitle.match(/^국제$/) != null)
-        type = '세계';
+        type = '국제';
       else if (subtitle.match(/^ICT\·과학$/) != null)
-        type = 'IT';
+        type = '기술';
       else if (subtitle.match(/^문화$/) != null)
         type = '문화';
     } else if (name === '경향신문') {
       if (subtitle.match(/^사회$/) != null)
         type = '사회';
       else if (subtitle.match(/^국제$/) != null)
-        type = '세계';
+        type = '국제';
       else if (subtitle.match(/^스포츠$/) != null)
         type = '스포츠';
     } else if (name === '세계일보') {
       if (subtitle.match(/^스포츠$/) != null)
         type = '스포츠';
       else if (subtitle.match(/^문화$/) != null)
+        type = '문화';
+    } else if (name === '국민일보') {
+      if (subtitle.match(/^월드$/) != null)
+        type = '국제';
+      else if (subtitle.match(/^IT$/) != null)
+        type = '기술';
+      else if (subtitle.match(/^방송\·문화$/) != null)
+        type = '문화';
+    } else if (name === '헤럴드경제') {
+      if (subtitle.match(/^월드$/) != null)
+        type = '국제';
+      else if (subtitle.match(/^컬쳐$/) != null)
+        type = '문화';
+    } else if (name === '문화일보') {
+      if (subtitle.match(/^Auto$/) != null)
+        type = '기술';
+      else if (subtitle.match(/^종합문화$/) != null)
+        type = '문화';
+      else if (subtitle.match(/^대중문화$/) != null)
+        type = '문화';
+    } else if (name === '디지털타임스') {
+      if (subtitle.match(/^정보미디어$/) != null)
+        type = '기술';
+      else if (subtitle.match(/^정보화$/) != null)
+        type = '기술';
+    } else if (name === '이데일리') {
+      if (subtitle.match(/^BOOK$/) != null)
         type = '문화';
     } else {
       if (subtitle.match(/^정치$/) != null) {
@@ -153,10 +190,10 @@ function crawlNews() {
         type = '경제';
       } else if (subtitle.match(/^사회$/) != null) {
         type = '사회';
-      } else if (subtitle.match(/^세계$/) != null) {
-        type = '세계';
-      } else if (subtitle.match(/^IT$/) != null) {
-        type = 'IT';
+      } else if (subtitle.match(/^국제$/) != null) {
+        type = '국제';
+      } else if (subtitle.match(/^기술$/) != null) {
+        type = '기술';
       } else if (subtitle.match(/^스포츠$/) != null) {
         type = '스포츠';
       } else if (subtitle.match(/^문화$/) != null) {
