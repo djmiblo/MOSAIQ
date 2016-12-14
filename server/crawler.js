@@ -16,6 +16,14 @@ require("jsdom").env("", function(err, window) {
 });
 
 
+if (process.argv.length < 3) {
+  console.log('Usage: node crawler.js <password> <date>');
+  console.log('If the date is not given, it will scrape today\'s paper.')
+
+  process.exit();
+}
+
+
 function crawlNews() {
   var url = '';
   var data = {
@@ -37,7 +45,7 @@ function crawlNews() {
 
 
   function setURL() {
-    var date = process.argv[2];
+    var date = process.argv[3];
     var regexp = /^\d{8}$/;
     if (date == null)
       url = 'http://m.news.naver.com/newspaper/home.nhn';
@@ -159,6 +167,8 @@ function crawlNews() {
     }
   }
 
+  var DBpassword = process.argv[2];
+
   async.waterfall([
     function scrapePublisher(callback) {
       setURL();
@@ -178,9 +188,15 @@ function crawlNews() {
               return true;
             }
 
-            data.publishers[newsName] = {
-              nlink: completeURL(newsLink),
-              articles: []
+            // testing only with this paper!!!
+            // testing only with this paper!!!
+            // testing only with this paper!!!
+            // testing only with this paper!!!
+            if (newsName == '조선일보') {
+              data.publishers[newsName] = {
+                nlink: completeURL(newsLink),
+                articles: []
+              }
             }
           });
 
@@ -330,7 +346,7 @@ function crawlNews() {
     function insertDB(fstCallback) {
       var client = mysql.createConnection({
         user: 'root',
-        password: '1q2w3e4r1!',
+        password: DBpassword,
         database: 'MOSAIQ'
       })
 
