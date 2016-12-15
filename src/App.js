@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Board from './Board';
 import Remote from './Remote';
 import $ from 'jquery';
+import Loading from './Loading.gif';
 
 const server = "http://52.79.104.225:41212/";
 // const server = "http://localhost:41212";
@@ -266,7 +267,7 @@ class App extends Component {
       return (
         <div className="App">
           <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
-          <h1>로딩중!</h1>
+          <img src={Loading} style={{height: window.innerHeight - 50}} />
         </div>
       );
     } else {
