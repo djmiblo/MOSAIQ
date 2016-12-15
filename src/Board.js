@@ -15,7 +15,7 @@ class Board extends Component {
       return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
     });
     return (
-      <div>
+      <div className="container-fluid" style={{padding: '0px', margin:'0px'}}>
         {
           articleRows.map((item, i) => (<Row remoteSelect={this.props.remoteSelect} key={i} articles={item} height={articleHeights[i]} onClick={this.props.onClick}/>))
         }
