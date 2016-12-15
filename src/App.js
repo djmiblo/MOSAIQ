@@ -77,7 +77,7 @@ class App extends Component {
       settingsMode: 'auto',
       firsts: {},
       section: headline,
-      sectionIndex: 0,
+      sectionIndex: -1,
       lastPublisherIndex:0,
       isEnd: false,
     };
@@ -105,14 +105,11 @@ class App extends Component {
     const articles = this.state.currentArticles;
     // handler for the 'ready' event
     window.castReceiverManager.onReady = function(event) {
-      console.log('Received Ready event: ' + JSON.stringify(event.data));
       window.castReceiverManager.setApplicationState("Application status is ready...");
     };
     const app = this;
     // handler for 'senderconnected' event
     window.castReceiverManager.onSenderConnected = function(event) {
-      console.log('Received Sender Connected event: ' + event.data);
-      console.log(window.castReceiverManager.getSender(event.data).userAgent);
       app.setState({
         isReceivingRemote: true,
         remoteSelect: articles[0]
@@ -121,7 +118,6 @@ class App extends Component {
 
     // handler for 'senderdisconnected' event
     window.castReceiverManager.onSenderDisconnected = function(event) {
-      console.log('Received Sender Disconnected event: ' + event.data);
       if (window.castReceiverManager.getSenders().length == 0) {
         window.close();
       }
@@ -140,7 +136,6 @@ class App extends Component {
     window.handleClose = this.handleClose;
     window.messageBus.onMessage = function(event) {
       if (event.data === 'next') {
-        console.log('receiving chromecast message App');
         window.handleNext();
       } else if (event.data == 'prev') {
         window.handlePrev();
@@ -184,10 +179,11 @@ class App extends Component {
         articles: json,
         articlesByCategory: articlesByCategory,
         publishers: publishers,
-        firsts: firsts
+        firsts: firsts,
       });
+      let currentArticles = app.getCurrentArticles(-1);
       app.setState({
-        currentArticles: app.getCurrentArticles(app.state.section),
+        currentArticles: currentArticles
       });
     }).catch(function (err) {
       console.log('fetch error');
@@ -195,7 +191,7 @@ class App extends Component {
       let json = app.getLocalArticles();
       app.setState({
         articles: json,
-        currentArticles: app.getCurrentArticles(app.state.section)
+        currentArticles: app.getCurrentArticles(app.state.sectionIndex)
       });
     });
   }
@@ -204,7 +200,7 @@ class App extends Component {
     let firsts = {};
     for (let item of articles) {
       if (item.isFirst == 'N')
-        continue
+        continue;
       else if (item.isFirst == 'Y') {
         if (!firsts[item.publisher])
           firsts[item.publisher] = [];
@@ -213,12 +209,7 @@ class App extends Component {
     }
     for (let publisher of publishers) {
       firsts[publisher].sort((a,b) => {
-        // if ((a.img == "" && b.img == "") || (a.img != "" && b.img !=""))
           return a.length - b.length;
-        // else if ((a.img != "" && b.img == ""))
-        //   return 1;
-        // else
-        //   return -1;
       });
     }
     return firsts;
@@ -243,12 +234,7 @@ class App extends Component {
       for (let publisher of publishers) {
         if (articlesByCategory[category][publisher] != undefined)
           articlesByCategory[category][publisher].sort((a,b) => {
-            // if ((a.img == "" && b.img == "") || (a.img != "" && b.img !=""))
               return a.length - b.length;
-          //   else if ((a.img != "" && b.img == ""))
-          //     return 1;
-          //   else
-          //     return -1;
           });
       }
     }
@@ -265,21 +251,31 @@ class App extends Component {
   }
 
   getCurrentArticles(sectionIndex) {
-    const section = categories[sectionIndex];
+    let section;
+    if (sectionIndex == -1)
+      section = headline;
+    else
+      section = categories[sectionIndex];
+
     let articles = [];
     let articlePool = {};
     let lastPublisherIndex = this.state.lastPublisherIndex;
-    if (section == headline)
-      articlePool = Object.assign({},this.state.firsts);
-    else
-      articlePool = Object.assign({},this.state.articlesByCategory);
+    if (section == headline) {
+      articlePool = Object.assign({}, this.state.firsts);
+    } else {
+      articlePool = Object.assign({}, this.state.articlesByCategory[section]);
+    }
 
     let total = this.getTotalArticleNumber(articlePool);
     if (total < pages_per_section) {
-      console.log('move to next section');
       // move to next section
-      if (sectionIndex + 1< categories.length)
+      if (sectionIndex + 1 < categories.length) {
         articles = this.getCurrentArticles(sectionIndex + 1);
+        this.setState({
+          sectionIndex: sectionIndex + 1,
+          section: categories[sectionIndex + 1],
+        });
+      }
       return articles;
     }
 
@@ -296,16 +292,22 @@ class App extends Component {
           break;
         }
       }
+      lastPublisherIndex = 0;
     }
 
+    console.log(section);
+    console.log(articlePool);
+
     if (section != headline) {
+      let newArticles = Object.assign({},this.state.articlesByCategory);
+      newArticles[section] = articlePool;
       this.setState({
-        articlesByCategory: articlePool
-      })
+        articlesByCategory: newArticles
+      });
     } else {
       this.setState({
         firstPool: articlePool
-      })
+      });
     }
 
     return articles
@@ -452,7 +454,6 @@ class App extends Component {
     if (this.state.page === 0)
       return;
 
-    console.log(this.state.future.length);
     const currentArticles = this.state.currentArticles.slice();
     let history = this.state.history.slice();
     const newCurrentArticles = history.pop();
@@ -482,7 +483,7 @@ class App extends Component {
     if (future.length != 0) {
       nextArticles = future.pop();
     } else {
-      nextArticles = this.getCurrentArticles(this.state.section);
+      nextArticles = this.getCurrentArticles(this.state.sectionIndex);
     }
     this.setState({
       currentArticles: nextArticles,
