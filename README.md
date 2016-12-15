@@ -21,7 +21,7 @@
 - `clientModel.js` shows how to request data to the server.  
   - the server returns the array of objects.  
   - **data form**  
-    [{date:\<date\>, publisher:\<publisher\>, headline:\<article headline\>, body:\<article body\>}, img:\<list of images\>, length:\<length of the body\> ...]  
+    [{date:\<date\>, publisher:\<publisher\>, type:\<type of article\>, headline:\<article headline\>, body:\<article body\>}, img:\<list of images\>, length:\<length of the body\> ...]  
 - `plainText.js` reads rows with `type` from MySQL MOSAIQ database.  
   Then, it makes file `file.csv` of the data for machine learning.  
 
