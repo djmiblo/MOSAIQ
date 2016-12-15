@@ -33,13 +33,13 @@ class Navbar extends Component {
     return (
       <nav className="navbar navbar-default" style={navbarStyle}>
         <div className="container-fluid" style={navbarStyle}>
-          <div className="navbar-header" style={navbarStyle} onClick={this.props.onTitle}>
+          <div className="navbar-header" style={navbarStyle}>
             {/*<ul className="nav navbar-nav navbar-left">*/}
               <a className="navbar-brand" href="#" style={{left:'0%', padding: '0px'}}>
                 <img src={Prev} onClick={this.props.onPrev} style={{height:'100%'}}/>
               </a>
             {/*</ul>*/}
-            <a className="navbar-brand" href="#" style={brandStyle}>
+            <a className="navbar-brand" href="#" style={brandStyle} onClick={this.props.onTitle}>
               <img src={Logo} style={logoStyle} />
             </a>
             {/*<ul className="nav navbar-nav navbar-right">*/}
