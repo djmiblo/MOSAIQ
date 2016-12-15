@@ -1,0 +1,8 @@
+@font-face {
+    font-family: myFirstFont;
+    src: url('NewFont.ttf');
+}
+
+.headline {
+    font-family: myFirstFont;
+}

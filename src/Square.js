@@ -3,17 +3,17 @@
  */
 import React, { Component } from 'react';
 import Texture from './texture.jpg';
+import './Square.css';
 
 class Square extends Component {
   getFontSize() {
-    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035;
+    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035 + 1;
     const minimumSize = 12;
     return sizeByCell > minimumSize? sizeByCell : minimumSize;
   }
 
   render() {
     const titleStyle = {
-      fontFamily: 'serif',
       fontSize: this.getFontSize(this.props.width),
       marginBotton: '0px',
       overflowWrap: 'break-word',
@@ -48,7 +48,7 @@ class Square extends Component {
             <img src={this.props.article.img} style={imgStyle} alt="article img"/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
               <h4>[{this.props.article.type}]</h4>
-              <p style={titleStyle}>{this.props.article.headline}</p>
+              <p className="headline" style={titleStyle}>{this.props.article.headline}</p>
             </div>
           </div>
         </div>
