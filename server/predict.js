@@ -15,7 +15,7 @@ require("jsdom").env("", function(err, window) {
   $ = require("jquery")(window);
 });
 
-if (process.argv.length < 3) {
+if (process.argv.length < 4) {
   console.log('Usage: node plainText.js <DB password>');
   process.exit();
 }
@@ -58,7 +58,12 @@ function predict (callback, client) {
     }
     selectNews(client, authClient, function(authClient,allNews) {
       console.log('total number of articles: ' + allNews.length);
-      callback(authClient, allNews, callback, client);
+      for (var i=0; i<0.95; i+=0.1) {
+        console.log('i = ' + i);
+        var start = Math.floor(allNews.length * i);
+        var end = Math.floor(allNews.length * (i + 0.1));
+        callback(authClient, allNews.slice(start,end), callback, client);
+      }
     });
   });
 }
@@ -82,7 +87,7 @@ function predict_single(authClient, articles, callback, client) {
         if (err) {
           return console.log(err);
         }
-        console.log(prediction.outputLabel);
+        console.log(article.news_id + " " + prediction.outputLabel);
         client.query('UPDATE news SET type=? WHERE news_id=?', [
           prediction.outputLabel, article.news_id
         ],
@@ -113,9 +118,10 @@ function decodeStr(str) {
 
 var allNews = [];
 var DBpassword = process.argv[2];
+var date = process.argv[3];
 
 function selectNews(client, authClient, callback) {
-  client.query('SELECT news_id, type, headline, body FROM news WHERE type=""',
+  client.query('SELECT news_id, type, headline, body FROM news WHERE type="" and date=?',[date],
     function(err, rows) {
       if (err)
         console.log(err);
