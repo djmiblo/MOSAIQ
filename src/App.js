@@ -320,23 +320,21 @@ class App extends Component {
 
     if (this.state.remoteSelect) {
       this.setState({
-        remoteSelect: newCurrentArticles[0]
+        remoteSelect: newCurrentArticles[0],
+        selectIndex: 0,
       });
     }
   }
 
   handleClickNext() {
-    console.log(this.state.future.length);
     let nextArticles = [];
     let future = this.state.future.slice();
     let history = this.state.history.slice();
     history.push(this.state.currentArticles);
 
     if (future.length != 0) {
-      console.log('future is there!');
       nextArticles = future.pop();
     } else {
-      console.log('get new future');
       nextArticles = this.getCurrentArticles(this.state.articles);
     }
     this.setState({
@@ -348,7 +346,8 @@ class App extends Component {
 
     if (this.state.remoteSelect) {
       this.setState({
-        remoteSelect: nextArticles[0]
+        remoteSelect: nextArticles[0],
+        selectIndex: 0,
       });
     }
   }
