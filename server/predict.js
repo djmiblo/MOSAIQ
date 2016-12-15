@@ -75,7 +75,7 @@ function predict (callback, client) {
 function predict_single(authClient, articles, callback, client) {
   var article = articles.pop();
   console.log('articles left: '+ articles.length);
-  if (articles.length > -1) {
+  if (article != undefined) {
     trainedmodels.predict({
       auth: authClient,
       // Project id used for this sample
