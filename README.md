@@ -30,7 +30,8 @@
          headline:\<article headline\>,  
          body:\<article body\>,  
          img:\<list of images\>,  
-         length:\<length of the body\>  
+         length:\<length of the body\>,  
+         isFirst:\<'Y' or 'N'\>  
        },  
       ...  
     ]    
