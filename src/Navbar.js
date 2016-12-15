@@ -20,12 +20,13 @@ class Navbar extends Component {
       display: 'block',
       marginLeft: 'auto',
       marginRight: 'auto',
-    }
+    };
     const brandStyle = {
       padding: '0px',
       position: 'absolute',
       width: '50%',
       left: '25%',
+      right: '25%',
       // marginLeft: '-200px !important',  /* 50% of your logo width */
       display: 'block'
     };
