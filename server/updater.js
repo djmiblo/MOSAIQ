@@ -16,7 +16,7 @@ require("jsdom").env("", function(err, window) {
 
 
 if (process.argv.length < 3) {
-  console.log('Usage: node crawler.js <password> <date>');
+  console.log('Usage: node updater.js <password> <date>');
   console.log('If the date is not given, it will scrape today\'s paper.')
 
   process.exit();
@@ -401,13 +401,11 @@ function crawlNews() {
                   var alink;
                   var h3 = $(this).find('h3').text();
                   var imp = getImp(h3);
-                  var type = getType(name, h3);
 
                   $(this).find('a').each(function() {
                     alink = completeURL( $(this).attr('href') );
                     data.publishers[name].articles.push({
                       alink: alink,
-                      type: type,
                       isFirst: imp
                     });
                   })
@@ -464,7 +462,6 @@ function crawlNews() {
               var beforeData = leftArticles.pop();
               var articleData = { 
                 alink: beforeData.alink,
-                type: beforeData.type,
                 isFirst: beforeData.isFirst
               };
 
@@ -474,16 +471,6 @@ function crawlNews() {
 
                   articleData.headline = 
                     $('div.article_header_title_box > h2.subject').text();
-                  filterAd(publisherName, $);
-                  articleData.body = $('#dic_area').html().
-                    replace(/(\<img.+)(\>)/g, '').
-                    replace(/(\<br)(\>)/g, '$1\/$2');
-
-                  var imgsrc = [];
-                  $('#dic_area').find('img').each(function(idx) {
-                    imgsrc.push($(this).attr('data-src'));
-                  })
-                  articleData.img = imgsrc;
 
                   data.publishers[publisherName].articles.push(articleData);
 
@@ -548,14 +535,11 @@ function crawlNews() {
               var name = publisher.name;
               var article = publisher.articles.pop();
               var headline = article.headline;
-              var body = article.body;
               var alink = article.alink;
-              var imgsrc = article.img.join(',');
-              var type = article.type;
               var isFirst = article.isFirst;
 
-              client.query('INSERT INTO news (date, publisher, headline, body, img, link, type, isFirst) VALUES (?,?,?,?,?,?,?,?)', [
-                date, name, headline, body, imgsrc, alink, type, isFirst
+              client.query('UPDATE news SET isFirst=? WHERE publisher=? AND headline=? AND date=?', [
+                isFirst, name, headline, date
               ], function(err, data) {
                 if (err) {
                   console.log(err);
