@@ -47,6 +47,7 @@ class Square extends Component {
           <div className="imgDiv" style={imgDivStyle}>
             <img src={this.props.article.img} style={imgStyle} alt="article img"/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
+              <h4>[{this.props.article.type}]</h4>
               <p style={titleStyle}>{this.props.article.headline}</p>
             </div>
           </div>

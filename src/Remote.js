@@ -19,6 +19,8 @@ class Remote extends Component {
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.sessionListener = this.sessionListener.bind(this);
+    this.requestSession = this.requestSession.bind(this);
+    this.stopSession = this.stopSession.bind(this);
   }
   sessionListener(newSession) {
     console.log('New session ID:' + newSession.sessionId);
@@ -34,6 +36,9 @@ class Remote extends Component {
   };
   stopSession() {
     window.stopApp();
+    this.setState({
+      isConnected: false
+    });
   };
   handleUP() {
     window.sendMessage("up");
