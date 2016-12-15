@@ -80,6 +80,7 @@ class App extends Component {
       sectionIndex: -1,
       lastPublisherIndex:0,
       isEnd: false,
+      pagesLeftInSection: pages_per_section + 1,
     };
     this.addRemoteHandler();
     this.startReceiveCast();
@@ -250,7 +251,7 @@ class App extends Component {
     return total;
   }
 
-  getCurrentArticles(sectionIndex) {
+  getCurrentArticles(sectionIndex, page) {
     let section;
     if (sectionIndex == -1)
       section = headline;
@@ -267,19 +268,22 @@ class App extends Component {
     }
 
     let total = this.getTotalArticleNumber(articlePool);
-    if (total < pages_per_section) {
+    if (total < articles_per_page || page == 1) {
       // move to next section
       if (sectionIndex + 1 < categories.length) {
-        articles = this.getCurrentArticles(sectionIndex + 1);
+        console.log('move to next section');
         this.setState({
           sectionIndex: sectionIndex + 1,
           section: categories[sectionIndex + 1],
         });
+        return this.getCurrentArticles(sectionIndex + 1, pages_per_section);
+      } else {
+        return articles;
       }
-      return articles;
     }
 
-    while (articles.length < pages_per_section) {
+    while (articles.length < articles_per_page) {
+      console.log("hello world");
       for (let i = lastPublisherIndex; i < publishers.length; i++) {
         if (articlePool[publishers[i]] != null && articlePool[publishers[i]].length != 0) {
           articles.push(articlePool[publishers[i]].pop());
@@ -302,12 +306,12 @@ class App extends Component {
       let newArticles = Object.assign({},this.state.articlesByCategory);
       newArticles[section] = articlePool;
       this.setState({
-        articlesByCategory: newArticles
+        articlesByCategory: newArticles,
       });
     } else {
       this.setState({
-        firstPool: articlePool
-      });
+        firstPool: articlePool,
+    });
     }
 
     return articles
@@ -457,9 +461,15 @@ class App extends Component {
     const currentArticles = this.state.currentArticles.slice();
     let history = this.state.history.slice();
     const newCurrentArticles = history.pop();
+    let newSection;
+    if (newCurrentArticles[0].isFirst == 'Y')
+      newSection = headline;
+    else
+      newSection = newCurrentArticles[0].type;
     let future = this.state.future.slice();
     future.push(currentArticles);
     this.setState({
+      section: newSection,
       future: future,
       history: history,
       currentArticles: newCurrentArticles,
@@ -483,9 +493,22 @@ class App extends Component {
     if (future.length != 0) {
       nextArticles = future.pop();
     } else {
-      nextArticles = this.getCurrentArticles(this.state.sectionIndex);
+      console.log('pages left: ' + this.state.pagesLeftInSection);
+      nextArticles = this.getCurrentArticles(this.state.sectionIndex, this.state.pagesLeftInSection - 1);
+      if (nextArticles[0] == null)
+        return;
+      if (this.state.pagesLeftInSection - 1 == 0)
+        this.setState({pagesLeftInSection: pages_per_section});
+      else
+        this.setState({pagesLeftInSection: this.state.pagesLeftInSection - 1});
     }
+    let newSection;
+    if (nextArticles[0].isFirst == 'Y')
+      newSection = headline;
+    else
+      newSection = nextArticles[0].type;
     this.setState({
+      section: newSection,
       currentArticles: nextArticles,
       history: history,
       page: this.state.page + 1,
