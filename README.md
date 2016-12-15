@@ -14,6 +14,7 @@
     | body      | MEDIUMTEXT  | YES  |     | NULL    |                |
     | img       | TEXT        | YES  |     | NULL    |                |
     | link      | TINYTEXT    | NO   |     | NULL    |                |
+    | type      | VARCHAR(10) | YES  |     | NULL    |                |
 
 - `autoCrawler.js` acts just as `crawler.js` except that it automatically scrapes articles every 5 a.m.  
 - `plainText.js` removes tags from articles and count their words  
@@ -21,6 +22,8 @@
   - the server returns the array of objects.  
   - **data form**  
     [{date:\<date\>, publisher:\<publisher\>, headline:\<article headline\>, body:\<article body\>}, img:\<list of images\>, length:\<length of the body\> ...]  
+- `plainText.js` reads rows with `type` from MySQL MOSAIQ database.  
+  Then, it makes file `file.csv` of the data for machine learning.  
 
 ### How to update Server  
 1. ssh login to AmazonAWS  
