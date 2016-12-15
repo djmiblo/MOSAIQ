@@ -51,70 +51,75 @@ class App extends Component {
     this.getArticlesFromServer();
   }
 
+
   addRemoteHandler() {
-    const articles = this.state.currentArticles;
-    // handler for the 'ready' event
-    window.castReceiverManager.onReady = function(event) {
-      console.log('Received Ready event: ' + JSON.stringify(event.data));
-      window.castReceiverManager.setApplicationState("Application status is ready...");
-    };
+    if (window.isChrome) {
+      const articles = this.state.currentArticles;
+      // handler for the 'ready' event
+      window.castReceiverManager.onReady = function (event) {
+        console.log('Received Ready event: ' + JSON.stringify(event.data));
+        window.castReceiverManager.setApplicationState("Application status is ready...");
+      };
+      let app = this;
+      // handler for 'senderconnected' event
+      window.castReceiverManager.onSenderConnected = function (event) {
+        console.log('Received Sender Connected event: ' + event.data);
+        console.log(window.castReceiverManager.getSender(event.data).userAgent);
+        app.setState({
+          isReceivingRemote: true,
+          remoteSelect: articles[0],
+          selectIndex: 0,
+        });
+      };
 
-    // handler for 'senderconnected' event
-    window.castReceiverManager.onSenderConnected = function(event) {
-      console.log('Received Sender Connected event: ' + event.data);
-      console.log(window.castReceiverManager.getSender(event.data).userAgent);
-      this.setState({
-        isReceivingRemote: true,
-        remoteSelect: articles[0]
-      });
-    };
+      // handler for 'senderdisconnected' event
+      window.castReceiverManager.onSenderDisconnected = function (event) {
+        console.log('Received Sender Disconnected event: ' + event.data);
+        if (window.castReceiverManager.getSenders().length == 0) {
+          window.close();
+        }
+      };
 
-    // handler for 'senderdisconnected' event
-    window.castReceiverManager.onSenderDisconnected = function(event) {
-      console.log('Received Sender Disconnected event: ' + event.data);
-      if (window.castReceiverManager.getSenders().length == 0) {
-        window.close();
-      }
-    };
-
-    // create a CastMessageBus to handle messages for a custom namespace
-    window.messageBus =
-      window.castReceiverManager.getCastMessageBus(
-        'urn:x-cast:com.text.caster');
-    // handler for the CastMessageBus message event
-    window.handlePrev = this.handleClickPrev;
-    window.handleNext = this.handleClickNext;
-    window.handleRight = this.handleRight;
-    window.handleLeft = this.handleLeft;
-    window.handleOk = this.handleOk;
-    window.handleClose = this.handleClose;
-    window.messageBus.onMessage = function(event) {
-      if (event.data === 'next') {
-        console.log('receiving chromecast message App');
-        window.handleNext();
-      } else if (event.data == 'prev') {
-        window.handlePrev();
-      } else if (event.data == 'right') {
-        window.handleRight();
-      } else if (event.data == 'left') {
-        window.handleLeft();
-      } else if (event.data == 'ok') {
-        window.handleOk();
-      } else if (event.data == 'close') {
-        window.handleClose();
-      } else if (event.data == 'up') {
-        console.log('scroll up');
-        $('#articleModal').animate({ scrollTop: -300 }, 'slow');
-      } else if (event.data == 'down') {
-        console.log('scroll down');
-        $('#articleModal').animate({ scrollTop: 300 }, 'slow');
-      }
-    };
+      // create a CastMessageBus to handle messages for a custom namespace
+      window.messageBus =
+        window.castReceiverManager.getCastMessageBus(
+          'urn:x-cast:com.text.caster');
+      // handler for the CastMessageBus message event
+      window.handlePrev = this.handleClickPrev;
+      window.handleNext = this.handleClickNext;
+      window.handleRight = this.handleRight;
+      window.handleLeft = this.handleLeft;
+      window.handleOk = this.handleOk;
+      window.handleClose = this.handleClose;
+      window.messageBus.onMessage = function (event) {
+        if (event.data === 'next') {
+          console.log('receiving chromecast message App');
+          window.handleNext();
+        } else if (event.data == 'prev') {
+          window.handlePrev();
+        } else if (event.data == 'right') {
+          window.handleRight();
+        } else if (event.data == 'left') {
+          window.handleLeft();
+        } else if (event.data == 'ok') {
+          window.handleOk();
+        } else if (event.data == 'close') {
+          window.handleClose();
+        } else if (event.data == 'up') {
+          console.log('scroll up');
+          $('#articleModal').animate({scrollTop: -300}, 'slow');
+        } else if (event.data == 'down') {
+          console.log('scroll down');
+          $('#articleModal').animate({scrollTop: 300}, 'slow');
+        }
+      };
+    }
   }
 
   startReceiveCast() {
     /* CastReceiver 실행하는 부분 */
-    window.castReceiverManager.start({statusText: "Application is starting"});
+    if (window.isChrome)
+      window.castReceiverManager.start({statusText: "Application is starting"});
   }
 
   getArticlesFromServer() {

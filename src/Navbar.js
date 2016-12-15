@@ -43,18 +43,18 @@ class Navbar extends Component {
               <img src={Logo} style={logoStyle} />
             </a>
           </div>
-          {/*<ul className="nav navbar-nav navbar-right">*/}
-            {/*<li><a href="#" onClick={this.props.ok}>OK</a></li>*/}
-          {/*</ul>*/}
-          {/*<ul className="nav navbar-nav navbar-right">*/}
-            {/*<li><a href="#" onClick={this.props.left}>left</a></li>*/}
-          {/*</ul>*/}
-          {/*<ul className="nav navbar-nav navbar-right">*/}
-            {/*<li><a href="#" onClick={this.props.right}>right</a></li>*/}
-          {/*</ul>*/}
-            {/*<ul className="nav navbar-nav navbar-right">*/}
-              {/*<li><a href="#" onClick={this.props.testRemote}>TestRemote</a></li>*/}
-            {/*</ul>*/}
+          <ul className="nav navbar-nav navbar-right">
+            <li><a href="#" onClick={this.props.ok}>OK</a></li>
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <li><a href="#" onClick={this.props.left}>left</a></li>
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <li><a href="#" onClick={this.props.right}>right</a></li>
+          </ul>
+            <ul className="nav navbar-nav navbar-right">
+              <li><a href="#" onClick={this.props.testRemote}>TestRemote</a></li>
+            </ul>
             <ul className="nav navbar-nav navbar-right">
               <a className="navbar-brand" href="#" style={{padding: '0px'}}>
                 <img src={Next} onClick={this.props.onNext} style={{height:'100%'}}/>
