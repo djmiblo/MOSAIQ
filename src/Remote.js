@@ -19,6 +19,7 @@ class Remote extends Component {
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.sessionListener = this.sessionListener.bind(this);
+    this.requestSession = this.requestSession.bind(this);
   }
   sessionListener(newSession) {
     console.log('New session ID:' + newSession.sessionId);
