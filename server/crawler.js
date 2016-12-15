@@ -58,6 +58,14 @@ function crawlNews() {
     return 'http://m.news.naver.com' + url;
   }
 
+  function getImp(str) {
+    var regexp = /^(1면)|(A1면)/;
+    if (str.match(regexp) !== null)
+      return 'Y';
+    else
+      return 'N';
+  }
+
   function getType(name, str) {
     var regexp = /면(.+)$/;
     str.match(regexp, str);
@@ -392,13 +400,15 @@ function crawlNews() {
                 if ( $(this).hasClass('newspaper_wrp') ) {
                   var alink;
                   var h3 = $(this).find('h3').text();
+                  var imp = getImp(h3);
                   var type = getType(name, h3);
 
                   $(this).find('a').each(function() {
                     alink = completeURL( $(this).attr('href') );
                     data.publishers[name].articles.push({
                       alink: alink,
-                      type: type
+                      type: type,
+                      isFirst: imp
                     });
                   })
                 }
@@ -454,7 +464,8 @@ function crawlNews() {
               var beforeData = leftArticles.pop();
               var articleData = { 
                 alink: beforeData.alink,
-                type: beforeData.type
+                type: beforeData.type,
+                isFirst: beforeData.isFirst
               };
 
               request(beforeData.alink, {timeout: 300000}, function(error, response, html) {
@@ -541,9 +552,10 @@ function crawlNews() {
               var alink = article.alink;
               var imgsrc = article.img.join(',');
               var type = article.type;
+              var isFirst = article.isFirst;
 
-              client.query('INSERT INTO news (date, publisher, headline, body, img, link, type) VALUES (?,?,?,?,?,?,?)', [
-                date, name, headline, body, imgsrc, alink, type
+              client.query('INSERT INTO news (date, publisher, headline, body, img, link, type, isFirst) VALUES (?,?,?,?,?,?,?,?)', [
+                date, name, headline, body, imgsrc, alink, type, isFirst
               ], function(err, data) {
                 if (err) {
                   console.log(err);

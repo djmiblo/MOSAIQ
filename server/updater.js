@@ -354,11 +354,9 @@ function crawlNews() {
               return true;
             }
 
-            if (newsName === '중앙일보') {
-              data.publishers[newsName] = {
-                nlink: completeURL(newsLink),
-                articles: []
-              }
+            data.publishers[newsName] = {
+              nlink: completeURL(newsLink),
+              articles: []
             }
           });
 
@@ -537,13 +535,11 @@ function crawlNews() {
               var name = publisher.name;
               var article = publisher.articles.pop();
               var headline = article.headline;
-              var body = article.body;
               var alink = article.alink;
-              var imgsrc = article.img.join(',');
-              var type = article.type;
+              var isFirst = article.isFirst;
 
-              client.query('INSERT INTO news (date, publisher, headline, body, img, link, type) VALUES (?,?,?,?,?,?,?)', [
-                date, name, headline, body, imgsrc, alink, type
+              client.query('UPDATE news SET isFirst=? WHERE publisher=? AND headline=? AND date=?', [
+                isFirst, name, headline, date
               ], function(err, data) {
                 if (err) {
                   console.log(err);
