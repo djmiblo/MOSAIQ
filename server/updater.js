@@ -538,8 +538,8 @@ function crawlNews() {
               var alink = article.alink;
               var isFirst = article.isFirst;
 
-              client.query('UPDATE news SET isFirst=? WHERE publisher=? AND headline=? AND date=?', [
-                isFirst, name, headline, date
+              client.query('UPDATE news SET isFirst=? WHERE date=? AND publisher=? AND headline=?', [
+                isFirst, date, name, headline
               ], function(err, data) {
                 if (err) {
                   console.log(err);
