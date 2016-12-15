@@ -1,4 +1,5 @@
 var http = require('http');
+var https = require('https');
 var express = require('express');
 var xml = require('xml');
 var bodyParser = require('body-parser');
@@ -11,6 +12,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }))
+
+var options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem'),
+}
 
 if (process.argv.length < 3) {
   console.log('Usage: node server.js <password>');
@@ -68,4 +74,8 @@ app.get('/', function(req, res) {
 
 http.createServer(app).listen(41212, function() {
   console.log('Server Running at localhost:41212');
+})
+
+https.createServer(options, app).listen(41211, function() {
+  console.log('HTTPS server running at localhost:433');
 })
