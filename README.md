@@ -27,7 +27,7 @@
 2. `git pull` in `~/workspace/MOSAIQ`  
 3. `npm run build` in `~/workspace/MOSAIQ`  
 4. when the build is done,  
-   `sudo cp ~/workspace/MOSAIQ/build/* /var/www/html/`  
+   `sudo cp -rf ~/workspace/MOSAIQ/build/* /var/www/html/`  
 5. now we have to stop server.js.  
    `forever list` to see the pid of server.js run by background process.  
 6. `forever stop <pid of server.js>` to stop the process.  
