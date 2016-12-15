@@ -27,6 +27,7 @@ class Navbar extends Component {
       width: '50%',
       left: '25%',
       right: '25%',
+      margin: '0px',
       // marginLeft: '-200px !important',  /* 50% of your logo width */
       display: 'block'
     };

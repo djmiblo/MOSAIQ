@@ -40,6 +40,7 @@ const publishers = [
   '이데일리',
   '코리아타임스'];
 
+const pages_per_section = 3;
 const articles_per_page = 7;
 const headline = '헤드라인';
 
@@ -76,12 +77,16 @@ class App extends Component {
       settingsMode: 'auto',
       firsts: {},
       section: headline,
+      sectionIndex: 0,
+      lastPublisherIndex:0,
+      isEnd: false,
     };
     this.addRemoteHandler();
     this.startReceiveCast();
     this.testRemote = this.testRemote.bind(this);
     this.toggleSetting = this.toggleSetting.bind(this);
     this.changeSettingsMode = this.changeSettingsMode.bind(this);
+    this.getCurrentArticles = this.getCurrentArticles.bind(this);
   }
 
   componentWillMount() {
@@ -182,7 +187,7 @@ class App extends Component {
         firsts: firsts
       });
       app.setState({
-        currentArticles: app.getCurrentArticles(json),
+        currentArticles: app.getCurrentArticles(app.state.section),
       });
     }).catch(function (err) {
       console.log('fetch error');
@@ -190,7 +195,7 @@ class App extends Component {
       let json = app.getLocalArticles();
       app.setState({
         articles: json,
-        currentArticles: app.getCurrentArticles(json)
+        currentArticles: app.getCurrentArticles(app.state.section)
       });
     });
   }
@@ -250,50 +255,60 @@ class App extends Component {
     return articlesByCategory;
   }
 
-  getCurrentArticles(input_articles) {
+  getTotalArticleNumber(articlePool) {
+    let total = 0;
+    for (let publisher of publishers) {
+      if (articlePool[publisher] != null)
+        total += articlePool[publisher].length
+    }
+    return total;
+  }
+
+  getCurrentArticles(sectionIndex) {
+    const section = categories[sectionIndex];
     let articles = [];
-    let firsts = Object.assign({},this.state.firsts);
-    console.log(firsts);
-    if (this.state.section == headline) {
-      for (let publisher of publishers) {
-        if (firsts[publisher] != null) {
-          console.log(publisher);
-          articles.push(firsts[publisher].pop());
-        }
-        if(articles.length == 7)
-          break;
-      }
-      this.setState({
-        firsts: firsts
-      });
+    let articlePool = {};
+    let lastPublisherIndex = this.state.lastPublisherIndex;
+    if (section == headline)
+      articlePool = Object.assign({},this.state.firsts);
+    else
+      articlePool = Object.assign({},this.state.articlesByCategory);
+
+    let total = this.getTotalArticleNumber(articlePool);
+    if (total < pages_per_section) {
+      console.log('move to next section');
+      // move to next section
+      if (sectionIndex + 1< categories.length)
+        articles = this.getCurrentArticles(sectionIndex + 1);
       return articles;
     }
-    //
-    //
-    //
-    //
-    // if (articles.length < 6)
-    //   return articles;
-    // else {
-    //   let newCurrent = [];
-    //   let lastIndex = [];
-    //
-    //   while(newCurrent.length < 7) {
-    //     let index = Math.floor(Math.random()*articles.length);
-    //     let item = articles[index];
-    //     let exist = false;
-    //     for (let i=0;i<lastIndex.length;i++){
-    //       if (lastIndex[i] == index)
-    //         exist = true;
-    //     }
-    //     if (!exist) {
-    //       newCurrent.push(item);
-    //       lastIndex.push(index);
-    //     }
-    //   }
-    //   newCurrent.sort((a, b) => b.length - a.length);
-    //   return newCurrent;
-    // }
+
+    while (articles.length < pages_per_section) {
+      for (let i = lastPublisherIndex; i < publishers.length; i++) {
+        if (articlePool[publishers[i]] != null && articlePool[publishers[i]].length != 0) {
+          articles.push(articlePool[publishers[i]].pop());
+        }
+        if (articles.length >= articles_per_page) {
+          lastPublisherIndex++;
+          this.setState({
+            lastPublisherIndex: lastPublisherIndex
+          });
+          break;
+        }
+      }
+    }
+
+    if (section != headline) {
+      this.setState({
+        articlesByCategory: articlePool
+      })
+    } else {
+      this.setState({
+        firstPool: articlePool
+      })
+    }
+
+    return articles
   }
 
   close() {
@@ -397,7 +412,7 @@ class App extends Component {
       return (
         <div className="App">
           <Navbar ok={this.handleOk} left={this.handleLeft} right={this.handleRight} testRemote={this.testRemote} onTitle={this.handleClickTitle} onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
-          <Board isRemote={this.state.isReceivingRemote} remoteSelect={this.state.remoteSelect} articles={this.state.currentArticles} onClick={this.open}/>
+          <Board section={this.state.section} isRemote={this.state.isReceivingRemote} remoteSelect={this.state.remoteSelect} articles={this.state.currentArticles} onClick={this.open}/>
 
           <Modal id="articleModal" show={this.state.showModal} onHide={this.close}>
             <Modal.Header closeButton>
@@ -467,7 +482,7 @@ class App extends Component {
     if (future.length != 0) {
       nextArticles = future.pop();
     } else {
-      nextArticles = this.getCurrentArticles(this.state.articles);
+      nextArticles = this.getCurrentArticles(this.state.section);
     }
     this.setState({
       currentArticles: nextArticles,

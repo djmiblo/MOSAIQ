@@ -16,6 +16,7 @@ class Board extends Component {
     });
     return (
       <div className="container-fluid" style={{padding: '0px', margin:'0px'}}>
+        <div className="container-fluid" style={{padding: '0px', margin:'0px', textAlign:'center'}}><h4>{this.props.section}</h4></div>
         {
           articleRows.map((item, i) => (<Row remoteSelect={this.props.remoteSelect} key={i} articles={item} height={articleHeights[i]} onClick={this.props.onClick}/>))
         }
