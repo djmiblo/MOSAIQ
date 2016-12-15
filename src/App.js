@@ -6,7 +6,9 @@ import Board from './Board';
 import Remote from './Remote';
 import $ from 'jquery';
 import Loading from './Loading.gif';
-
+// import SampleNews from './sample';
+// const sampleNews = SampleNews;
+const sampleNews = [];
 const server = "http://52.79.104.225:41212/";
 // const server = "http://localhost:41212";
 const predictionApi = "https://www.googleapis.com/prediction/v1.6/projects/the-option-102712/trainedmodels/news-identifier-2/predict?key=";
@@ -41,14 +43,21 @@ class App extends Component {
       remoteSelect: null,
       selectIndex: 0
     };
-    this.getArticlesFromServer();
     this.addRemoteHandler();
     this.startReceiveCast();
     this.testRemote = this.testRemote.bind(this);
   }
 
   componentWillMount() {
+    // this.getLocalArticles();
     this.getArticlesFromServer();
+  }
+
+  getLocalArticles() {
+    this.setState({
+      articles: sampleNews,
+      currentArticles: this.getCurrentArticles(json.slice())
+    });
   }
 
   addRemoteHandler() {
@@ -58,12 +67,12 @@ class App extends Component {
       console.log('Received Ready event: ' + JSON.stringify(event.data));
       window.castReceiverManager.setApplicationState("Application status is ready...");
     };
-
+    const app = this;
     // handler for 'senderconnected' event
     window.castReceiverManager.onSenderConnected = function(event) {
       console.log('Received Sender Connected event: ' + event.data);
       console.log(window.castReceiverManager.getSender(event.data).userAgent);
-      this.setState({
+      app.setState({
         isReceivingRemote: true,
         remoteSelect: articles[0]
       });
