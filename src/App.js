@@ -14,8 +14,34 @@ const server = "http://52.79.104.225:41212/";
 // const server = "http://localhost:41212";
 const predictionApi = "https://www.googleapis.com/prediction/v1.6/projects/the-option-102712/trainedmodels/news-identifier-2/predict?key=";
 const predictionKey = "AIzaSyCuZJgBL5oe5hhj_bjXu1KK0HYcAma9e5w";
-let date = "?date=20161214";
-const categories = ['정치', '사회', '경제', '국제', '문화', '기술', '스포츠'];
+let date = "?date=20161215";
+const categories = ['정치', '경제', '사회', '국제', '문화', '기술', '스포츠'];
+const publishers = [
+  '조선일보',
+  '중앙일보',
+  '동아일보',
+  '매일경제',
+  '한국경제',
+  '한겨레',
+  '경향신문',
+  // '문화일보',
+  '국민일보',
+  '한국일보',
+  '서울신문',
+  '세계일보',
+  '머니투데이',
+  '서울경제',
+  '전자신문',
+  // '헤럴드경제',
+  // '아시아경제',
+  '코리아헤럴드',
+  '파이낸셜뉴스',
+  '디지털타임스',
+  '이데일리',
+  '코리아타임스'];
+
+const articles_per_page = 7;
+const headline = '헤드라인';
 
 class App extends Component {
   constructor() {
@@ -46,12 +72,16 @@ class App extends Component {
       selectIndex: 0,
       isSettingMode: true,
       articlesByCategory: {},
-      publishers: []
+      publishers: [],
+      settingsMode: 'auto',
+      firsts: {},
+      section: headline,
     };
     this.addRemoteHandler();
     this.startReceiveCast();
     this.testRemote = this.testRemote.bind(this);
     this.toggleSetting = this.toggleSetting.bind(this);
+    this.changeSettingsMode = this.changeSettingsMode.bind(this);
   }
 
   componentWillMount() {
@@ -143,13 +173,16 @@ class App extends Component {
       console.log('got response');
       return response.json();
     }).then(function (json) {
-      let publishers = app.getPublishers(json.slice());
-      let articlesByCategory = app.getArticlesByCategory(json.slice());
+      let articlesByCategory = app.getArticlesByCategory(json);
+      let firsts = app.getFirsts(json);
       app.setState({
         articles: json,
-        currentArticles: app.getCurrentArticles(json.slice()),
         articlesByCategory: articlesByCategory,
-        publishers: publishers
+        publishers: publishers,
+        firsts: firsts
+      });
+      app.setState({
+        currentArticles: app.getCurrentArticles(json),
       });
     }).catch(function (err) {
       console.log('fetch error');
@@ -161,21 +194,37 @@ class App extends Component {
       });
     });
   }
-  getPublishers(articles) {
-    let publishers = [];
+
+  getFirsts(articles) {
+    let firsts = {};
     for (let item of articles) {
-      if (!publishers.includes(item.publisher)) {
-        publishers.push(item.publisher);
+      if (item.isFirst == 'N')
+        continue
+      else if (item.isFirst == 'Y') {
+        if (!firsts[item.publisher])
+          firsts[item.publisher] = [];
+        firsts[item.publisher].push(item);
       }
     }
-    console.log(publishers);
-    return publishers;
+    for (let publisher of publishers) {
+      firsts[publisher].sort((a,b) => {
+        // if ((a.img == "" && b.img == "") || (a.img != "" && b.img !=""))
+          return a.length - b.length;
+        // else if ((a.img != "" && b.img == ""))
+        //   return 1;
+        // else
+        //   return -1;
+      });
+    }
+    return firsts;
   }
 
   getArticlesByCategory(articles) {
     let articlesByCategory = {};
     for (let category of categories) {
       for (let article of articles) {
+        if (article.isFirst == 'Y')
+          continue;
         if (article.type == category) {
           if(!articlesByCategory[category])
             articlesByCategory[category] = Object.assign({});
@@ -185,32 +234,66 @@ class App extends Component {
         }
       }
     }
+    for (let category of categories) {
+      for (let publisher of publishers) {
+        if (articlesByCategory[category][publisher] != undefined)
+          articlesByCategory[category][publisher].sort((a,b) => {
+            // if ((a.img == "" && b.img == "") || (a.img != "" && b.img !=""))
+              return a.length - b.length;
+          //   else if ((a.img != "" && b.img == ""))
+          //     return 1;
+          //   else
+          //     return -1;
+          });
+      }
+    }
     return articlesByCategory;
   }
 
-  getCurrentArticles(articles) {
-    if (articles.length < 6)
-      return articles;
-    else {
-      let newCurrent = [];
-      let lastIndex = [];
-
-      while(newCurrent.length < 7) {
-        let index = Math.floor(Math.random()*articles.length);
-        let item = articles[index];
-        let exist = false;
-        for (let i=0;i<lastIndex.length;i++){
-          if (lastIndex[i] == index)
-            exist = true;
+  getCurrentArticles(input_articles) {
+    let articles = [];
+    let firsts = Object.assign({},this.state.firsts);
+    console.log(firsts);
+    if (this.state.section == headline) {
+      for (let publisher of publishers) {
+        if (firsts[publisher] != null) {
+          console.log(publisher);
+          articles.push(firsts[publisher].pop());
         }
-        if (!exist) {
-          newCurrent.push(item);
-          lastIndex.push(index);
-        }
+        if(articles.length == 7)
+          break;
       }
-      newCurrent.sort((a, b) => b.length - a.length);
-      return newCurrent;
+      this.setState({
+        firsts: firsts
+      });
+      return articles;
     }
+    //
+    //
+    //
+    //
+    // if (articles.length < 6)
+    //   return articles;
+    // else {
+    //   let newCurrent = [];
+    //   let lastIndex = [];
+    //
+    //   while(newCurrent.length < 7) {
+    //     let index = Math.floor(Math.random()*articles.length);
+    //     let item = articles[index];
+    //     let exist = false;
+    //     for (let i=0;i<lastIndex.length;i++){
+    //       if (lastIndex[i] == index)
+    //         exist = true;
+    //     }
+    //     if (!exist) {
+    //       newCurrent.push(item);
+    //       lastIndex.push(index);
+    //     }
+    //   }
+    //   newCurrent.sort((a, b) => b.length - a.length);
+    //   return newCurrent;
+    // }
   }
 
   close() {
@@ -288,6 +371,12 @@ class App extends Component {
     });
   }
 
+  changeSettingsMode(mode) {
+    this.setState({
+      settingsMode: mode
+    });
+  }
+
   render() {
     if (this.state.articles.length === 0) {
       return (
@@ -333,7 +422,7 @@ class App extends Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              { this.state.isSettingMode? <Setting publishers={this.state.publishers} />:<Remote/>}
+              { this.state.isSettingMode? <Setting changeMode={this.changeSettingsMode} mode={this.state.settingsMode} publishers={this.state.publishers} />:<Remote/>}
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.closeSetting}>Close</Button>
