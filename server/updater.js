@@ -58,6 +58,14 @@ function crawlNews() {
     return 'http://m.news.naver.com' + url;
   }
 
+  function getImp(str) {
+    var regexp = /^(1면)|(A1면)/;
+    if (str.match(regexp) !== null)
+      return 'Y';
+    else
+      return 'N';
+  }
+
   function getType(name, str) {
     var regexp = /면(.+)$/;
     str.match(regexp, str);
@@ -346,9 +354,11 @@ function crawlNews() {
               return true;
             }
 
-            data.publishers[newsName] = {
-              nlink: completeURL(newsLink),
-              articles: []
+            if (newsName === '중앙일보') {
+              data.publishers[newsName] = {
+                nlink: completeURL(newsLink),
+                articles: []
+              }
             }
           });
 
@@ -392,13 +402,13 @@ function crawlNews() {
                 if ( $(this).hasClass('newspaper_wrp') ) {
                   var alink;
                   var h3 = $(this).find('h3').text();
-                  var type = getType(name, h3);
+                  var imp = getImp(h3);
 
                   $(this).find('a').each(function() {
                     alink = completeURL( $(this).attr('href') );
                     data.publishers[name].articles.push({
                       alink: alink,
-                      type: type
+                      isFirst: imp
                     });
                   })
                 }
@@ -454,7 +464,7 @@ function crawlNews() {
               var beforeData = leftArticles.pop();
               var articleData = { 
                 alink: beforeData.alink,
-                type: beforeData.type
+                isFirst: beforeData.isFirst
               };
 
               request(beforeData.alink, {timeout: 300000}, function(error, response, html) {
@@ -463,16 +473,6 @@ function crawlNews() {
 
                   articleData.headline = 
                     $('div.article_header_title_box > h2.subject').text();
-                  filterAd(publisherName, $);
-                  articleData.body = $('#dic_area').html().
-                    replace(/(\<img.+)(\>)/g, '').
-                    replace(/(\<br)(\>)/g, '$1\/$2');
-
-                  var imgsrc = [];
-                  $('#dic_area').find('img').each(function(idx) {
-                    imgsrc.push($(this).attr('data-src'));
-                  })
-                  articleData.img = imgsrc;
 
                   data.publishers[publisherName].articles.push(articleData);
 
