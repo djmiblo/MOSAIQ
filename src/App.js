@@ -32,7 +32,8 @@ class App extends Component {
       articles: [],
       currentArticles: [],
       history: [],
-      page: 1,
+      future: [],
+      page: 0,
       showModal: false,
       showSetting: false,
       current: null,
@@ -121,7 +122,7 @@ class App extends Component {
     fetch(server + date, {
       method: 'get',
       headers: new Headers({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       })
     }).then(function (response) {
       console.log('got response');
@@ -199,22 +200,6 @@ class App extends Component {
 
   open(article) {
     this.setState({showModal: true, current: article});
-  }
-
-  handleClickPrev() {
-    let nextArticles = this.getCurrentArticles(this.articles);
-    this.setState({
-      currentArticles: nextArticles,
-      page: this.state.page + 1
-    });
-  }
-
-  handleClickNext() {
-    let nextArticles = this.getCurrentArticles(this.articles);
-    this.setState({
-      currentArticles: nextArticles,
-      page: this.state.page + 1
-    });
   }
 
   handleRight() {
@@ -317,27 +302,54 @@ class App extends Component {
   }
 
   handleClickPrev() {
-    if (this.state.page === 1)
+    if (this.state.page === 0)
       return;
 
+    console.log(this.state.future.length);
+    const currentArticles = this.state.currentArticles.slice();
     let history = this.state.history.slice();
-    let prevArticles = history.pop();
+    const newCurrentArticles = history.pop();
+    let future = this.state.future.slice();
+    future.push(currentArticles);
     this.setState({
+      future: future,
       history: history,
-      currentArticles: prevArticles,
+      currentArticles: newCurrentArticles,
       page: this.state.page - 1
     });
+
+    if (this.state.remoteSelect) {
+      this.setState({
+        remoteSelect: newCurrentArticles[0],
+        selectIndex: 0,
+      });
+    }
   }
 
   handleClickNext() {
-    let nextArticles = this.getCurrentArticles(this.state.articles);
+    let nextArticles = [];
+    let future = this.state.future.slice();
     let history = this.state.history.slice();
     history.push(this.state.currentArticles);
+
+    if (future.length != 0) {
+      nextArticles = future.pop();
+    } else {
+      nextArticles = this.getCurrentArticles(this.state.articles);
+    }
     this.setState({
       currentArticles: nextArticles,
       history: history,
-      page: this.state.page + 1
+      page: this.state.page + 1,
+      future: future,
     });
+
+    if (this.state.remoteSelect) {
+      this.setState({
+        remoteSelect: nextArticles[0],
+        selectIndex: 0,
+      });
+    }
   }
 
   handleClickTitle() {
