@@ -77,5 +77,5 @@ http.createServer(app).listen(41212, function() {
 })
 
 https.createServer(options, app).listen(41211, function() {
-  console.log('HTTPS server running at localhost:433');
+  console.log('HTTPS server running at localhost:41211');
 })
