@@ -31,8 +31,8 @@ class Setting extends Component {
           <buttonz type="button" onClick={() => this.props.changeMode('semi')} className="btn btn-primary active" style={modeButtonStyle}>Semi</buttonz>
           <button type="button" onClick={() => this.props.changeMode('manual')} className="btn btn-primary" style={modeButtonStyle}>Manual</button>
         </div>
-        { publishers.map((item) => {
-          return (<div id={item} className="column"  onDrag={()=>test(item)} style={{textAlign:'center'}}>{item}</div>);
+        { publishers.map((item, i) => {
+          return (<div key={i} id={item} className="column"  onDrag={()=>test(item)} style={{textAlign:'center'}}>{item}</div>);
         }) }
       </div>);
     } else {
