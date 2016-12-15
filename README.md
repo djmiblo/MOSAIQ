@@ -21,4 +21,9 @@
   - the server returns the array of objects.  
   - **data form**  
     [{date:\<date\>, publisher:\<publisher\>, headline:\<article headline\>, body:\<article body\>}, img:\<list of images\>, length:\<length of the body\> ...]  
-
+### How to update Server  
+1. ssh login to AmazonAWS  
+2. `git pull` in `~/workspace/MOSAIQ`  
+3. `npm run build` in `~/workspace/MOSAIQ`  
+4. when the build is done,  
+   `sudo cp ~/workspace/MOSAIQ/build/* /var/www/html/`  
