@@ -56,7 +56,7 @@ class App extends Component {
   getLocalArticles() {
     this.setState({
       articles: sampleNews,
-      currentArticles: this.getCurrentArticles(json.slice())
+      currentArticles: this.getCurrentArticles(sampleNews.slice())
     });
   }
 
