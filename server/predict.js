@@ -15,7 +15,7 @@ require("jsdom").env("", function(err, window) {
   $ = require("jquery")(window);
 });
 
-if (process.argv.length < 4) {
+if (process.argv.length < 5) {
   console.log('Usage: node plainText.js <DB password>');
   process.exit();
 }
@@ -58,11 +58,15 @@ function predict (callback, client) {
     }
     selectNews(client, authClient, function(authClient,allNews) {
       console.log('total number of articles: ' + allNews.length);
-      for (var i=0; i<0.95; i+=0.1) {
-        console.log('i = ' + i);
-        var start = Math.floor(allNews.length * i);
-        var end = Math.floor(allNews.length * (i + 0.1));
-        callback(authClient, allNews.slice(start,end), callback, client);
+      if (ways == 1) {
+        callback(authClient, allNews, callback, client);
+      } else {
+        for (var i = 0; i < ways; i++) {
+          console.log('i = ' + i);
+          var start = Math.floor(allNews.length * i / 10);
+          var end = Math.floor(allNews.length * (i + 1) / 10);
+          callback(authClient, allNews.slice(start, end), callback, client);
+        }
       }
     });
   });
@@ -75,7 +79,7 @@ function predict_single(authClient, articles, callback, client) {
     trainedmodels.predict({
       auth: authClient,
       // Project id used for this sample
-      project: 'the-option-102712',
+      project: '904469969385',
       id: 'news-identifier-2',
       resource: {
         input: {
@@ -119,6 +123,7 @@ function decodeStr(str) {
 var allNews = [];
 var DBpassword = process.argv[2];
 var date = process.argv[3];
+var ways = process.argv[4];
 
 function selectNews(client, authClient, callback) {
   client.query('SELECT news_id, type, headline, body FROM news WHERE type="" and date=?',[date],
