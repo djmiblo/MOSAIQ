@@ -15,6 +15,7 @@
     | img       | TEXT        | YES  |     | NULL    |                |
     | link      | TINYTEXT    | NO   |     | NULL    |                |
     | type      | VARCHAR(10) | YES  |     | NULL    |                |
+    | isFirst   | VARCHAR(1)  | NO   |     | NULL    |                |
 
 - `autoCrawler.js` acts just as `crawler.js` except that it automatically scrapes articles every 5 a.m.  
 - `plainText.js` removes tags from articles and count their words  
