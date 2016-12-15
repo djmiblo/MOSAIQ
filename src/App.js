@@ -261,7 +261,9 @@ class App extends Component {
       return (
         <div className="App">
           <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
-          <img src={Loading} style={{height: window.innerHeight - 50}} />
+          <div style={{width:'100%'}}>
+            <img src={Loading} style={{width: 'auto', height: window.innerHeight - 50}} />
+          </div>
         </div>
       );
     } else {
