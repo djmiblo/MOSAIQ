@@ -4,8 +4,9 @@ var xml = require('xml');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var mysql = require('mysql');
-
+var cors = require('cors');
 var app = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -28,7 +29,7 @@ function selectNews(date, callback) {
     user: 'root',
     password: DBpassword,
     database: 'MOSAIQ'
-  })
+  });
 
   client.query('SELECT date, publisher, type, headline, body, img FROM news WHERE date=?', [date],
     function(err, rows) {
@@ -40,7 +41,7 @@ function selectNews(date, callback) {
           value.length = calcLen(value.body);
           value.img = value.img.split(',');
           allNews.push(value);
-        })
+        });
         callback();
       }
     })
@@ -52,8 +53,8 @@ app.get('/', function(req, res) {
     res.set({
       'Content-Type': 'application/json',
       'Access-Control-Allow-Methods': 'GET',
-      'Access-Control-Allow-Origin': '*'
-    })
+      'Access-Control-Allow-Origin': '*',
+    });
 
     if (allNews.length != 0)
       res.json(allNews);
