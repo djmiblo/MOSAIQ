@@ -15,8 +15,8 @@ require("jsdom").env("", function(err, window) {
 });
 
 
-if (process.argv.length < 3) {
-  console.log('Usage: node updater.js <password> <date>');
+if (process.argv.length < 4) {
+  console.log('Usage: node updater.js <password> <date> <publisher>');
   console.log('If the date is not given, it will scrape today\'s paper.')
 
   process.exit();
@@ -42,6 +42,7 @@ function crawlNews() {
     }
   }
 
+  var argPublisher = process.argv[4];
 
   function setURL() {
     var date = process.argv[3];
@@ -354,9 +355,11 @@ function crawlNews() {
               return true;
             }
 
-            data.publishers[newsName] = {
-              nlink: completeURL(newsLink),
-              articles: []
+            if (newsName === argPublisher) {
+              data.publishers[newsName] = {
+                nlink: completeURL(newsLink),
+                articles: []
+              }
             }
           });
 
