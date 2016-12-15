@@ -10,7 +10,7 @@ import Loading from './Loading.gif';
 // import SampleNews from './sample';
 // const sampleNews = SampleNews;
 const sampleNews = [];
-const server = "https://52.79.104.225:41211/";
+const server = "http://52.79.104.225:41212/";
 // const server = "https://localhost:41211";
 const predictionApi = "https://www.googleapis.com/prediction/v1.6/projects/the-option-102712/trainedmodels/news-identifier-2/predict?key=";
 const predictionKey = "AIzaSyCuZJgBL5oe5hhj_bjXu1KK0HYcAma9e5w";
