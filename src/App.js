@@ -6,8 +6,10 @@ import Board from './Board';
 import Remote from './Remote';
 import $ from 'jquery';
 
-// const server = "http://52.79.104.225:41212/";
-const server = "http://localhost:41212";
+const server = "http://52.79.104.225:41212/";
+// const server = "http://localhost:41212";
+const predictionApi = "https://www.googleapis.com/prediction/v1.6/projects/the-option-102712/trainedmodels/news-identifier-2/predict?key=";
+const predictionKey = "AIzaSyCuZJgBL5oe5hhj_bjXu1KK0HYcAma9e5w";
 let date = "?date=20161214";
 
 class App extends Component {
@@ -139,6 +141,32 @@ class App extends Component {
     });
   }
 
+  getArticleTypes() {
+    const app = this;
+    fetch(predictionApi + predictionKey, {
+      method: 'post',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    }).then(function (response) {
+      console.log('got response');
+      return response.json();
+    }).then(function (json) {
+      app.setState({
+        articles: json,
+        currentArticles: app.getCurrentArticles(json.slice())
+      });
+    }).catch(function (err) {
+      console.log('fetch error');
+      console.log(err);
+      let json = app.getArticlesOffline();
+      app.setState({
+        articles: json,
+        currentArticles: app.getCurrentArticles(json.slice())
+      });
+    });
+  }
+
   getCurrentArticles(articles) {
     if (articles.length < 6)
       return articles;
@@ -159,8 +187,6 @@ class App extends Component {
           lastIndex.push(index);
         }
       }
-      console.log('last index');
-      console.log(lastIndex);
       newCurrent.sort((a, b) => b.length - a.length);
       return newCurrent;
     }
