@@ -342,7 +342,7 @@ class App extends Component {
         firstPool: articlePool,
     });
     }
-
+    articles.sort((a,b)=> b.length - a.length);
     return articles
   }
 
