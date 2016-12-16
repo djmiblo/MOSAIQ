@@ -46,15 +46,16 @@ let preference = {
   '기술': 1000,
   '스포츠': 1000,
   '문화': 1000,
-}
+};
 
-const pages_per_section = 3;
+let pages_per_section = 3;
 const articles_per_page = 7;
 const headline = '헤드라인';
 
 class App extends Component {
   constructor() {
     super();
+    this.setSetting = this.setSetting.bind(this);
     this.applySetting = this.applySetting.bind(this);
     this.sortArray = this.sortArray.bind(this);
     this.handleClickTitle = this.handleClickTitle.bind(this);
@@ -92,6 +93,7 @@ class App extends Component {
       lastPublisherIndex:0,
       isEnd: false,
       pagesLeftInSection: pages_per_section + 1,
+      applyPrefer: false,
     };
     this.addRemoteHandler();
     this.startReceiveCast();
@@ -117,12 +119,12 @@ class App extends Component {
     let sum = 0;
     Object.keys(preference).forEach(function(type) {
       sum += preference[type];
-    })
+    });
 
     Object.keys(preference).forEach(function(type) {
       preference[type] *= 7000;
       preference[type] /= sum;
-    })
+    });
   }
 
   getLocalArticles() {
@@ -402,6 +404,40 @@ class App extends Component {
     this.setState({ showSetting: false });
   }
 
+  setSetting() {
+    this.setState({ showSetting: false });
+    if (this.state.applyPrefer)
+      this.setState({
+        preference: Object.assign({}, preference),
+        applyPrefer: false
+      });
+    this.setState({
+      articles: [],
+      currentArticles: [],
+      history: [],
+      future: [],
+      page: 0,
+      showModal: false,
+      showSetting: false,
+      current: null,
+      isReceivingRemote: false,
+      remoteSelect: null,
+      selectIndex: 0,
+      isSettingMode: true,
+      articlesByCategory: {},
+      publishers: [],
+      settingsMode: 'auto',
+      firsts: {},
+      section: headline,
+      sectionIndex: -1,
+      lastPublisherIndex:0,
+      isEnd: false,
+      pagesLeftInSection: pages_per_section + 1,
+      applyPrefer: false,
+    });
+    this.getArticlesFromServer();
+  }
+
   testRemote() {
     const articles = this.state.currentArticles;
     this.setState({
@@ -434,9 +470,18 @@ class App extends Component {
   }
 
   changeSettingsMode(mode) {
-    this.setState({
-      settingsMode: mode
-    });
+    if (mode == 'up') {
+      if (pages_per_section < 6)
+        pages_per_section += 1;
+    } else if (mode == 'down') {
+      if (pages_per_section > 2)
+        pages_per_section -= 1;
+    } else if (mode == 'ok') {
+      this.setState({
+        applyPrefer: true
+      });
+    }
+    this.forceUpdate();
   }
 
   render() {
@@ -485,13 +530,16 @@ class App extends Component {
           <Modal show={this.state.showSetting} onHide={this.closeSetting}>
             <Modal.Header>
               <Modal.Title>
-                <h4 style={{textAlign:'center'}}>Remote</h4>
+                { this.renderSetting() }
+                {/*<h4 style={{textAlign:'center'}}>Remote</h4>*/}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Remote/>
+              { this.state.isSettingMode? <Setting pages={pages_per_section} applySetting={this.applySetting} changeMode={this.changeSettingsMode} mode={this.state.settingsMode} publishers={this.state.publishers} />:<Remote/>}
+              {/*<Remote/>*/}
             </Modal.Body>
             <Modal.Footer>
+              <Button onClick={this.setSetting}>Apply</Button>
               <Button onClick={this.closeSetting}>Close</Button>
             </Modal.Footer>
           </Modal>
