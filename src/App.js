@@ -441,11 +441,16 @@ class App extends Component {
 
   render() {
     if (this.state.articles.length === 0) {
+      let imgStyle;
+      if (window.innerHeight > window.innerWidth)
+        imgStyle = {height: 'auto', width: window.innerWidth};
+      else
+        imgStyle = {width: 'auto', height: window.innerHeight - 50};
       return (
         <div className="App">
           <Navbar onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
           <div style={{width:'100%'}}>
-            <img src={Loading} style={{width: 'auto', height: window.innerHeight - 50}} />
+            <img src={Loading} style={imgStyle} />
           </div>
         </div>
       );
