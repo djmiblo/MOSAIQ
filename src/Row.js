@@ -45,13 +45,13 @@ class Row extends Component {
     if (articles.length === numberOfColumns) {
       for (let i=0;i<numberOfColumns;i++) {
         let article = articles[i];
-        columns.push(this.makeColumn([article],[1],(article.length/totalLength*100 + pref[article.type]/totalPref*100)/2));
+        columns.push(this.makeColumn([article],[1],(article.length/totalLength*200 + pref[article.type]/totalPref*200)));
         // columns.push(this.makeColumn([article],[1],(article.length/totalLength + this.props.preference[article.type]/totalPref) * 50));
       }
     } else if (numberOfColumns === 2) {
       /* 기사 3개가 칼럼 2개로 나눠졌을 경우 */
       let longestArticle = articles.shift();
-      columns.push(this.makeColumn([longestArticle],[1],(longestArticle.length/totalLength + this.props.preference[longestArticle.type]/totalPref) * 50));
+      columns.push(this.makeColumn([longestArticle],[1],(longestArticle.length/totalLength + this.props.preference[longestArticle.type]/totalPref) * 100));
       columns.push(this.makeColumn(articles, articles.map((item) => item.length), (2 - this.props.preference[longestArticle.type]/totalPref - longestArticle.length/totalLength)*100));
     }
     return columns;
@@ -107,7 +107,7 @@ class Row extends Component {
     };
 
     if (width > 0) {
-      column = Object.assign({}, column, {width: window.innerWidth * (width/100)});
+      column = Object.assign({}, column, {width: window.innerWidth * (width/200)});
     }
 
     return column;

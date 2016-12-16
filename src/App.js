@@ -480,11 +480,11 @@ class App extends Component {
           <Modal show={this.state.showSetting} onHide={this.closeSetting}>
             <Modal.Header>
               <Modal.Title>
-                  { this.renderSetting() }
+                <h4 style={{textAlign:'center'}}>Remote</h4>
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              { this.state.isSettingMode? <Setting applySetting={this.applySetting} changeMode={this.changeSettingsMode} mode={this.state.settingsMode} publishers={this.state.publishers} />:<Remote/>}
+              <Remote/>
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.closeSetting}>Close</Button>

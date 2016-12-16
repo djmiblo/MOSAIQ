@@ -47,6 +47,9 @@ class Navbar extends Component {
               <a className="navbar-brand" href="#" style={{position:'absolute', right:'0%', padding: '0px'}}>
                 <img src={Next} onClick={this.props.onNext} style={{height:'100%'}}/>
               </a>
+            <a className="navbar-brand" href="#" style={{position:'absolute', right:'10%', padding: '0px'}}>
+              <img src={Next} onClick={this.props.applySetting} style={{opacity:0, height:'100%'}}/>
+            </a>
             {/*</ul>*/}
           </div>
           {/*<ul className="nav navbar-nav navbar-right">*/}

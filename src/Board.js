@@ -11,8 +11,12 @@ class Board extends Component {
     let articleRows = this.divideArticles(articles.slice());
     let totalAvailHeight = (window.innerHeight - Navbar.height);
     let totalArticleLength = articles.reduce((a,b) => a + b.length, 0);
+    let totalPref = 0;
+    for (let key in this.props.preference) {
+      totalPref += this.props.preference[key];
+    }
     let articleHeights = articleRows.map((item) => {
-      return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight;
+      return (item.reduce((a,b) => a + b.length, 0) / totalArticleLength) * totalAvailHeight * 0.95;
     });
     return (
       <div className="container-fluid" style={{padding: '0px', margin:'0px'}}>

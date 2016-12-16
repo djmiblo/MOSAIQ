@@ -7,7 +7,7 @@ import './Square.css';
 
 class Square extends Component {
   getFontSize() {
-    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035 + 1;
+    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035 - 2;
     const minimumSize = 12;
     return sizeByCell > minimumSize? sizeByCell : minimumSize;
   }
@@ -48,8 +48,7 @@ class Square extends Component {
             <img src={this.props.article.img} style={imgStyle} alt="article img"/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
               <h4>[{this.props.article.publisher}]</h4>
-              <h4>[{this.props.preference? this.props.preference[this.props.article.type]:null}]</h4>
-              <h4>[{this.props.article.length}]</h4>
+              {/*<h4>[{this.props.preference? this.props.preference[this.props.article.type]:null}]</h4>*/}
               <p className="headline" style={titleStyle}>{this.props.article.headline}</p>
             </div>
           </div>
