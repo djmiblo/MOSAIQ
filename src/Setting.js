@@ -23,6 +23,8 @@ class Setting extends Component {
         <br/>
         <br />
         <h3 style={{textAlign: 'center'}}>MOSAIQ의 놀라운 추천 시스템이 가동중!</h3>
+        <br/>
+        <button type="button" onClick={() => this.props.applySetting} className="btn btn-danger" style={modeButtonStyle}>적용!</button>
       </div>);
     } else if (mode == 'semi') {
       return (<div>

@@ -12,8 +12,6 @@ import Loading from './Loading.gif';
 const sampleNews = [];
 const server = "http://52.79.104.225:41212/";
 // const server = "https://localhost:41211";
-const predictionApi = "https://www.googleapis.com/prediction/v1.6/projects/the-option-102712/trainedmodels/news-identifier-2/predict?key=";
-const predictionKey = "AIzaSyCuZJgBL5oe5hhj_bjXu1KK0HYcAma9e5w";
 let date = "?date=20161215";
 const categories = ['정치', '경제', '사회', '국제', '문화', '기술', '스포츠'];
 const publishers = [
@@ -57,6 +55,8 @@ const headline = '헤드라인';
 class App extends Component {
   constructor() {
     super();
+    this.applySetting = this.applySetting.bind(this);
+    this.sortArray = this.sortArray.bind(this);
     this.handleClickTitle = this.handleClickTitle.bind(this);
     this.handleClickPrev = this.handleClickPrev.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
@@ -70,6 +70,7 @@ class App extends Component {
     this.addRemoteHandler = this.addRemoteHandler.bind(this);
     // this.handleEvent = this.handleEvent.bind(this);
     this.state = {
+      preference: Object.assign({}, preference),
       articles: [],
       currentArticles: [],
       history: [],
@@ -179,8 +180,8 @@ class App extends Component {
         window.handleClose();
       } else if (event.data == 'up') {
         console.log('scroll up');
-        let posiion =  $('#articleModal').scrollTop();
-        $('#articleModal').animate({ scrollTop: - 200 }, 'slow');
+        let position =  $('#articleModal').scrollTop();
+        $('#articleModal').animate({ scrollTop: position - 200}, 'slow');
       } else if (event.data == 'down') {
         console.log('scroll down');
         let posiion =  $('#articleModal').scrollTop();
@@ -228,6 +229,8 @@ class App extends Component {
     });
   }
 
+
+
   getFirsts(articles) {
     let firsts = {};
     for (let item of articles) {
@@ -241,10 +244,15 @@ class App extends Component {
     }
     for (let publisher of publishers) {
       firsts[publisher].sort((a,b) => {
-          return a.length - b.length;
+          return this.sortArray(a,b)
       });
     }
     return firsts;
+  }
+
+  sortArray(a,b) {
+    const pref = this.state.preference;
+    return a.length * pref[a.type] - b.length * pref[b.type]
   }
 
   getArticlesByCategory(articles) {
@@ -266,7 +274,7 @@ class App extends Component {
       for (let publisher of publishers) {
         if (articlesByCategory[category][publisher] != undefined)
           articlesByCategory[category][publisher].sort((a,b) => {
-              return a.length - b.length;
+              return this.sortArray(a,b)
           });
       }
     }
@@ -344,7 +352,7 @@ class App extends Component {
         firstPool: articlePool,
     });
     }
-    articles.sort((a,b)=> b.length - a.length);
+    articles.sort((a,b)=> this.sortArray(a,b));
     return articles
   }
 
@@ -450,8 +458,8 @@ class App extends Component {
       }
       return (
         <div className="App">
-          <Navbar ok={this.handleOk} left={this.handleLeft} right={this.handleRight} testRemote={this.testRemote} onTitle={this.handleClickTitle} onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
-          <Board section={this.state.section} isRemote={this.state.isReceivingRemote} remoteSelect={this.state.remoteSelect} articles={this.state.currentArticles} onClick={this.open}/>
+          <Navbar applySetting={this.applySetting} ok={this.handleOk} left={this.handleLeft} right={this.handleRight} testRemote={this.testRemote} onTitle={this.handleClickTitle} onPrev={this.handleClickPrev} onNext={this.handleClickNext}/>
+          <Board sort={this.sortArray} preference={this.state.preference} section={this.state.section} isRemote={this.state.isReceivingRemote} remoteSelect={this.state.remoteSelect} articles={this.state.currentArticles} onClick={this.open}/>
 
           <Modal id="articleModal" show={this.state.showModal} onHide={this.close}>
             <Modal.Header closeButton>
@@ -476,7 +484,7 @@ class App extends Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              { this.state.isSettingMode? <Setting changeMode={this.changeSettingsMode} mode={this.state.settingsMode} publishers={this.state.publishers} />:<Remote/>}
+              { this.state.isSettingMode? <Setting applySetting={this.applySetting} changeMode={this.changeSettingsMode} mode={this.state.settingsMode} publishers={this.state.publishers} />:<Remote/>}
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.closeSetting}>Close</Button>
@@ -485,6 +493,12 @@ class App extends Component {
         </div>
       );
     }
+  }
+
+  applySetting() {
+    this.setState({
+      preference: preference
+    });
   }
 
   handleClickPrev() {

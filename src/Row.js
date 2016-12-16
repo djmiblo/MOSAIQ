@@ -28,22 +28,31 @@ class Row extends Component {
   }
 
   makeColumnsFromArticles(articles) {
+    const pref = this.props.preference;
     articles.sort(function (a, b) {
-      return b.length - a.length;
+      if (this)
+        return this.props.sort(a,b);
+      else
+        return b.length * pref[b.type] - a.length * pref[a.type]
     });
     let numberOfColumns = this.getNumberOfColumns(articles.slice());
     let totalLength = articles.reduce((a,b) => a + b.length, 0);
+    let totalPref = 0;
+    for (let key in this.props.preference) {
+      totalPref += this.props.preference[key];
+    }
     let columns = [];
     if (articles.length === numberOfColumns) {
       for (let i=0;i<numberOfColumns;i++) {
         let article = articles[i];
-        columns.push(this.makeColumn([article],[1],article.length/totalLength * 100));
+        columns.push(this.makeColumn([article],[1],(article.length/totalLength*100 + pref[article.type]/totalPref*100)/2));
+        // columns.push(this.makeColumn([article],[1],(article.length/totalLength + this.props.preference[article.type]/totalPref) * 50));
       }
     } else if (numberOfColumns === 2) {
       /* 기사 3개가 칼럼 2개로 나눠졌을 경우 */
       let longestArticle = articles.shift();
-      columns.push(this.makeColumn([longestArticle],[1],longestArticle.length/totalLength * 100));
-      columns.push(this.makeColumn(articles, articles.map((item) => item.length), (1 - longestArticle.length/totalLength)*100));
+      columns.push(this.makeColumn([longestArticle],[1],(longestArticle.length/totalLength + this.props.preference[longestArticle.type]/totalPref) * 50));
+      columns.push(this.makeColumn(articles, articles.map((item) => item.length), (2 - this.props.preference[longestArticle.type]/totalPref - longestArticle.length/totalLength)*100));
     }
     return columns;
   }
@@ -125,7 +134,7 @@ class Row extends Component {
         }
         cells.push((
           <td onClick={() => this.props.onClick(article)} rowSpan={rowSpan} width={column.width} style={isRemoteSelected? selectCellStyle:cellStyle}>
-            <Square height={this.rowHeight * rowSpan} width={column.width} article={article}/>
+            <Square preference={this.props.preference} height={this.rowHeight * rowSpan} width={column.width} article={article}/>
           </td>
         ));
         

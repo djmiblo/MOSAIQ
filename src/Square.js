@@ -48,6 +48,8 @@ class Square extends Component {
             <img src={this.props.article.img} style={imgStyle} alt="article img"/>
             <div style={{width: '80%', left: '10%', position: 'relative'}}>
               <h4>[{this.props.article.publisher}]</h4>
+              <h4>[{this.props.preference? this.props.preference[this.props.article.type]:null}]</h4>
+              <h4>[{this.props.article.length}]</h4>
               <p className="headline" style={titleStyle}>{this.props.article.headline}</p>
             </div>
           </div>
