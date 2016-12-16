@@ -40,6 +40,16 @@ const publishers = [
   '이데일리',
   '코리아타임스'];
 
+let preference = {
+  '정치': 1000,
+  '경제': 1000,
+  '사회': 1000,
+  '국제': 1000,
+  '기술': 1000,
+  '스포츠': 1000,
+  '문화': 1000,
+}
+
 const pages_per_section = 3;
 const articles_per_page = 7;
 const headline = '헤드라인';
@@ -93,6 +103,25 @@ class App extends Component {
   componentWillMount() {
     // this.getLocalArticles();
     this.getArticlesFromServer();
+  }
+
+  updatePref(section) {
+    let score = preference[section];
+    let diff = 300000 / score;
+    preference[section] += diff;
+    this.normalize();
+  }
+
+  normalize() {
+    let sum = 0;
+    Object.keys(preference).forEach(function(type) {
+      sum += preference[type];
+    })
+
+    Object.keys(preference).forEach(function(type) {
+      preference[type] *= 7000;
+      preference[type] /= sum;
+    })
   }
 
   getLocalArticles() {
@@ -313,7 +342,7 @@ class App extends Component {
         firstPool: articlePool,
     });
     }
-
+    articles.sort((a,b)=> b.length - a.length);
     return articles
   }
 
@@ -322,7 +351,9 @@ class App extends Component {
   }
 
   open(article) {
+    this.updatePref(article.type);
     this.setState({showModal: true, current: article});
+    console.log(preference);
   }
 
   handleRight() {
