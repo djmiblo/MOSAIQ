@@ -179,10 +179,12 @@ class App extends Component {
         window.handleClose();
       } else if (event.data == 'up') {
         console.log('scroll up');
-        $('#articleModal').animate({ scrollTop: -300 }, 'slow');
+        let posiion =  $('#articleModal').scrollTop();
+        $('#articleModal').animate({ scrollTop: - 200 }, 'slow');
       } else if (event.data == 'down') {
         console.log('scroll down');
-        $('#articleModal').animate({ scrollTop: 300 }, 'slow');
+        let posiion =  $('#articleModal').scrollTop();
+        $('#articleModal').animate({ scrollTop: posiion + 200 }, 'slow');
       }
     };
   }
