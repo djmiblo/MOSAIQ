@@ -7,7 +7,7 @@ import './Square.css';
 
 class Square extends Component {
   getFontSize() {
-    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035 - 2;
+    const sizeByCell = Math.sqrt(this.props.width * this.props.width * this.props.height) * 0.0035 - 7;
     const minimumSize = 12;
     return sizeByCell > minimumSize? sizeByCell : minimumSize;
   }
