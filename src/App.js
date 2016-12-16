@@ -252,7 +252,7 @@ class App extends Component {
 
   sortArray(a,b) {
     const pref = this.state.preference;
-    return a.length * pref[a.type] - b.length * pref[b.type]
+    return b.length * pref[b.type] - a.length * pref[a.type]
   }
 
   getArticlesByCategory(articles) {
