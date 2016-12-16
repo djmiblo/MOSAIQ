@@ -132,17 +132,23 @@ class App extends Component {
   }
 
   addRemoteHandler() {
-    const articles = this.state.currentArticles;
+    window.app = this;
+    const articles = window.app.currentArticles;
     // handler for the 'ready' event
     window.castReceiverManager.onReady = function(event) {
       window.castReceiverManager.setApplicationState("Application status is ready...");
+      window.app.setState({
+        isReceivingRemote: true,
+        remoteSelect: articles[0],
+        selectIndex: 0
+      });
     };
-    const app = this;
     // handler for 'senderconnected' event
     window.castReceiverManager.onSenderConnected = function(event) {
-      app.setState({
+      window.app.setState({
         isReceivingRemote: true,
-        remoteSelect: articles[0]
+        remoteSelect: articles[0],
+        selectIndex: 0
       });
     };
 
