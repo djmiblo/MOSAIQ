@@ -9,6 +9,7 @@ import $ from 'jquery';
 import Loading from './Loading.gif';
 // import SampleNews from './sample';
 // const sampleNews = SampleNews;
+let globalArticles = [];
 const sampleNews = [];
 const server = "http://52.79.104.225:41212/";
 // const server = "https://localhost:41211";
@@ -405,7 +406,7 @@ class App extends Component {
   }
 
   setSetting() {
-    this.setState({ showSetting: false });
+    this.setState({ showSetting: false }, this.forceUpdate);
     if (this.state.applyPrefer)
       this.setState({
         preference: Object.assign({}, preference),
